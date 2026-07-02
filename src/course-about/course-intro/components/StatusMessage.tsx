@@ -15,7 +15,12 @@ export const StatusMessage = ({ variant, messageKey }: StatusMessageTypes) => {
   );
 
   return (
-    <Stack role="status" direction="horizontal" gap={2} className={`text-${variant}-500 h4`}>
+    <Stack
+      role="status"
+      direction="horizontal"
+      gap={2}
+      className={`course-about-status-banner course-about-status-banner--${variant}`}
+    >
       <Icon src={icon} />
       {intl.formatMessage(messages[messageKey])}
     </Stack>

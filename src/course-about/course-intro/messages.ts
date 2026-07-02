@@ -41,6 +41,41 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred. Please try again later.',
     description: 'The text for the status message when an error occurs during enrollment.',
   },
+  statusMessagePurchased: {
+    id: 'category.course-about.course-intro.status-message.purchased',
+    defaultMessage: 'You have purchased this course',
+    description: 'The text for the status message when the user has a verified (paid) enrollment.',
+  },
+  howToGetInviteBtn: {
+    id: 'category.course-about.course-intro.how-to-get-invite-btn',
+    defaultMessage: 'How to get an invite',
+    description: 'Label and tooltip for the button that opens the invite-only help modal.',
+  },
+  inviteInstructionsModalTitle: {
+    id: 'category.course-about.course-intro.invite-instructions-modal.title',
+    defaultMessage: 'How to get an invite',
+    description: 'Title of the modal explaining how to get invited to an invitation-only course.',
+  },
+  inviteInstructionsModalBody: {
+    id: 'category.course-about.course-intro.invite-instructions-modal.body',
+    defaultMessage: 'Enrollment in this course is managed by the organization offering it. Please contact your program administrator or {supportEmail} for information on how to receive an invitation.',
+    description: 'Placeholder body text for the invite-only help modal, shown until each partner can supply its own message.',
+  },
+  closeModalBtn: {
+    id: 'category.course-about.course-intro.close-modal-btn',
+    defaultMessage: 'Close',
+    description: 'Label for the button that closes the invite-instructions modal.',
+  },
+  checkingEnrollmentOptionsBtn: {
+    id: 'category.course-about.course-intro.checking-enrollment-options-btn',
+    defaultMessage: 'Loading...',
+    description: 'The text for the enrollment button while it is still checking whether this course can be purchased, before the user has clicked anything.',
+  },
+  buyCourseBtn: {
+    id: 'category.course-about.course-intro.buy-course-btn',
+    defaultMessage: 'Buy Course',
+    description: 'The text for the button to purchase a course that has a purchase link.',
+  },
 });
 
 export default messages;

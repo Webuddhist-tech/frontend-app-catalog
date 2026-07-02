@@ -1,13 +1,9 @@
 import { getConfig } from '@edx/frontend-platform';
 import { IntlShape } from '@edx/frontend-platform/i18n';
-import {
-  BsFacebook as BsFacebookIcon,
-  BsTwitterX as BsTwitterXIcon,
-  Email as EmailIcon,
-} from '@openedx/paragon/icons';
 
 import type { CourseAboutData } from '../../types';
 import messages from './messages';
+import { XSocialIcon, FacebookSocialIcon, EmailSocialIcon } from './icons';
 
 /**
  * Gets the formatted share text for different social sharing platforms
@@ -61,19 +57,19 @@ export const getSocialLinks = (intl: IntlShape) => [
   {
     id: 'twitter',
     destination: (courseAboutData: CourseAboutData) => getTwitterShareUrl(courseAboutData, intl),
-    icon: BsTwitterXIcon,
+    icon: XSocialIcon,
     screenReaderText: intl.formatMessage(messages.socialSharingTwitter),
   },
   {
     id: 'facebook',
     destination: () => getFacebookShareUrl(),
-    icon: BsFacebookIcon,
+    icon: FacebookSocialIcon,
     screenReaderText: intl.formatMessage(messages.socialSharingFacebook),
   },
   {
     id: 'email',
     destination: (courseData: CourseAboutData) => getEmailShareUrl(courseData, intl),
-    icon: EmailIcon,
+    icon: EmailSocialIcon,
     screenReaderText: intl.formatMessage(messages.socialSharingEmail),
   },
 ];

@@ -99,6 +99,49 @@ describe('useEnrollmentActions', () => {
     expect(logError).not.toHaveBeenCalled();
   });
 
+  it('resets a stuck pending flag when the page is restored from the back-forward cache', () => {
+    // Mirrors the real redirect: the success path never itself flips
+    // isEnrollmentPending back to false, it just navigates away.
+    mockEnrollAndRedirect.mockReturnValue(new Promise(() => {}));
+    const { result } = renderHookWithWrapper({
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
+    });
+
+    act(() => {
+      result.current.handleChangeEnrollment();
+    });
+    expect(result.current.isEnrollmentPending).toBe(true);
+
+    const pageShowEvent = new Event('pageshow');
+    Object.defineProperty(pageShowEvent, 'persisted', { value: true });
+    act(() => {
+      window.dispatchEvent(pageShowEvent);
+    });
+
+    expect(result.current.isEnrollmentPending).toBe(false);
+  });
+
+  it('leaves a genuinely in-flight pending flag alone on an ordinary pageshow', () => {
+    mockEnrollAndRedirect.mockReturnValue(new Promise(() => {}));
+    const { result } = renderHookWithWrapper({
+      courseId: mockCourseAboutResponse.id,
+      ecommerceCheckoutLink: mockCourseAboutResponse.ecommerceCheckoutLink,
+    });
+
+    act(() => {
+      result.current.handleChangeEnrollment();
+    });
+    expect(result.current.isEnrollmentPending).toBe(true);
+
+    // A normal (non-bfcache) pageshow — persisted is false/undefined.
+    act(() => {
+      window.dispatchEvent(new Event('pageshow'));
+    });
+
+    expect(result.current.isEnrollmentPending).toBe(true);
+  });
+
   it('should handle ecommerce checkout with missing link', () => {
     const { result } = renderHookWithWrapper({
       courseId: mockCourseAboutResponse.id,

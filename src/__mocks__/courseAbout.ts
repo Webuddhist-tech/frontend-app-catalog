@@ -97,7 +97,21 @@ export const mockCourseAboutResponse = {
   displayNumberWithDefault: '123',
   displayOrgWithDefault: 'openedx',
   overview: '<div>Course overview content</div>',
-  ocwLinks: [],
-  prerequisites: [],
-  requirements: 'Basic programming knowledge',
+  description: '<p>This is the long course description explaining the course in detail.</p>',
+  learningInfo: [
+    'Understand the fundamentals of the subject',
+    'Apply core concepts to real-world problems',
+  ],
+  instructorInfo: [
+    {
+      name: 'Jane Doe',
+      title: 'Professor',
+      organization: 'openedX University',
+      image: 'https://example.com/instructors/jane-doe.jpg',
+      bio: '<p>Jane is a professor specializing in the subject with over 10 years of experience.</p>',
+    },
+  ],
+  duration: '6 weeks',
+  enrolledStudentsCount: 1234,
+  requirements: '<p>Completion of an introductory programming course.</p>',
 };

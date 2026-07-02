@@ -4,6 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
+import { ShoppingCartLineIcon } from '../course-about/course-intro/icons';
 import messages from '../course-about/course-intro/messages';
 import type { EnrollmentButtonTypes } from '../course-about/course-intro/components/types';
 
@@ -46,10 +47,14 @@ export const BuyCourseEnrollmentButton = ({
     return undefined;
   }, []);
 
+  // Checking whether this course has a purchase link — not the same thing
+  // as an enrollment actually being submitted, so this gets its own label
+  // rather than reusing "Enrolling...", which reads as if the user had
+  // already clicked something.
   if (loading) {
     return (
       <Button variant="primary" disabled>
-        {intl.formatMessage(messages.enrollNowBtnPending)}
+        {intl.formatMessage(messages.checkingEnrollmentOptionsBtn)}
       </Button>
     );
   }
@@ -58,11 +63,13 @@ export const BuyCourseEnrollmentButton = ({
     return (
       <Button
         variant="primary"
+        iconBefore={ShoppingCartLineIcon}
+        className="course-about-buy-course-btn"
         onClick={() => {
           window.location.assign(purchaseLink);
         }}
       >
-        Buy Course
+        {intl.formatMessage(messages.buyCourseBtn)}
       </Button>
     );
   }

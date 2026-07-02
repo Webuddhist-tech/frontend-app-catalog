@@ -56,4 +56,16 @@ describe('<HomePageOverlay />', () => {
     // tints, and drops onto a second line.
     expect(heading().querySelector('.home-hero__title-accent')).toHaveTextContent('Padma');
   });
+
+  it('gives a Tibetan name extra line-height so it does not collide with the line above', () => {
+    renderWithUser({ name: 'སངས་རྒྱས་རྒྱལ།', username: 'sangye' });
+
+    expect(heading().querySelector('.home-hero__title-accent')).toHaveClass('home-hero__title-accent--tibetan');
+  });
+
+  it('does not add the Tibetan line-height modifier to an English name', () => {
+    renderWithUser({ name: 'Lionel Messi', username: 'lionelmessi' });
+
+    expect(heading().querySelector('.home-hero__title-accent')).not.toHaveClass('home-hero__title-accent--tibetan');
+  });
 });

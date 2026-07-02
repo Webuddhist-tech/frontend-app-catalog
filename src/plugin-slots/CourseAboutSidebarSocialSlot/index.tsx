@@ -11,7 +11,7 @@ const CourseAboutSidebarSocialSlot = ({ socialLinks }: { socialLinks: SocialLink
 
   return (
     <Stack
-      className="justify-content-center my-3"
+      className="justify-content-center"
       direction="horizontal"
       gap={4}
       aria-label={intl.formatMessage(messages.socialSharingOptionsAriaLabel)}

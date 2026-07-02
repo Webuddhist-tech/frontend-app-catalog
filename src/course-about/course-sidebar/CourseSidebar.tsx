@@ -5,7 +5,7 @@ import SidebarDetails from './sidebar-details/SidebarDetails';
 import type { CourseAboutData } from '../types';
 
 const CourseSidebar = ({ courseAboutData }: { courseAboutData: CourseAboutData }) => (
-  <Card>
+  <Card className="course-about-sidebar">
     <Card.Section className="p-0">
       <SidebarSocial courseAboutData={courseAboutData} />
       <SidebarDetails courseAboutData={courseAboutData} />

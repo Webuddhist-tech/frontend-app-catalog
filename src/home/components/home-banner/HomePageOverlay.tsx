@@ -1,9 +1,11 @@
 import { useContext, type ReactNode } from 'react';
+import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 
 import type { AppContextTypes } from '@src/header/types';
+import { tibetanModifierClass } from '@src/utils';
 import { getGreetingName } from './utils';
 import messages from './messages';
 
@@ -12,10 +14,23 @@ import messages from './messages';
  *
  * Defined at module scope so it is the same function on every render, rather
  * than a fresh component type React would tear the heading down to swap.
+ *
+ * The extra modifier class is only added when the wrapped text is actually
+ * Tibetan script: that's the case that needs more line-height than this
+ * heading's own (Jomolhari's stacked consonants and vowel signs reach well
+ * above/below a normal line) — an English name keeps the tighter default.
  */
-const renderAccent = (chunks: ReactNode[]) => (
-  <span className="home-hero__title-accent">{chunks}</span>
-);
+const renderAccent = (chunks: ReactNode[]) => {
+  const text = chunks.map(String).join('');
+
+  return (
+    <span
+      className={classNames('home-hero__title-accent', tibetanModifierClass(text, 'home-hero__title-accent--tibetan'))}
+    >
+      {chunks}
+    </span>
+  );
+};
 
 /**
  * The hero's text block: a small eyebrow label above the page heading.

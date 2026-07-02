@@ -1,8 +1,11 @@
-import type { Icon } from '@openedx/paragon';
+import type { ComponentType, SVGProps } from 'react';
 
 export interface SocialLink {
   id: string;
   destination: string;
-  icon: typeof Icon;
+  // The component passed as <Icon src={...} />, not Icon itself — `typeof
+  // Icon` previously here only worked because Paragon's own icon modules are
+  // untyped JS, so nothing caught it not actually matching Icon's own props.
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   screenReaderText: string;
 }

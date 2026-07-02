@@ -6,6 +6,11 @@ const messages = defineMessages({
     defaultMessage: 'Play course introduction video',
     description: 'The text for the button to play the course introduction video.',
   },
+  watchIntroBtn: {
+    id: 'category.course-about.course-intro.course-media.watch-intro-btn',
+    defaultMessage: 'Watch intro',
+    description: 'The visible label on the badge over the course image for courses with an introduction video.',
+  },
 });
 
 export default messages;

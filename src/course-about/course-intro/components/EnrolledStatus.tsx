@@ -9,17 +9,26 @@ import { STATUS_MESSAGE_VARIANTS } from '../constants';
 import type { EnrolledStatusTypes } from './types';
 import { StatusMessage } from './StatusMessage';
 
-export const EnrolledStatus = ({ showCoursewareLink, courseId }: EnrolledStatusTypes) => {
+// Covers both the plain-enrolled and verified/purchased cases: they only
+// differ in which status message reads, not in layout or the button — there
+// is no "Manage purchase" link, since nothing in this app manages a purchase
+// yet.
+export const EnrolledStatus = ({ courseId, enrollmentMode }: EnrolledStatusTypes) => {
   const intl = useIntl();
-  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.small.maxWidth });
+  // "large" rather than "small": side by side, the status pill and the
+  // button were squeezing each other down to an uncomfortably narrow width
+  // well before running out of room outright — laptop-width screens, not
+  // just phone ones.
+  const isCompact = useMediaQuery({ maxWidth: breakpoints.large.maxWidth });
+  const isVerified = enrollmentMode === 'verified';
 
   return (
-    <Stack direction={isExtraSmall ? 'vertical' : 'horizontal'} gap={isExtraSmall ? 2 : 5}>
+    <Stack direction={isCompact ? 'vertical' : 'horizontal'} gap={isCompact ? 2 : 5}>
       <StatusMessage
         variant={STATUS_MESSAGE_VARIANTS.SUCCESS}
-        messageKey="statusMessageEnrolled"
+        messageKey={isVerified ? 'statusMessagePurchased' : 'statusMessageEnrolled'}
       />
-      <Button as="a" href={getLearningHomePageUrl(courseId)}>
+      <Button as="a" variant="secondary" href={getLearningHomePageUrl(courseId)}>
         {intl.formatMessage(messages.viewCourseBtn)}
       </Button>
     </Stack>
