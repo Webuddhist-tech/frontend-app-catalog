@@ -9,6 +9,7 @@ export const mockCourseResponse: Course = {
     imageUrl: '/asset-v1:edX+DemoX+Demo_Course+type@asset+block@course_image.jpg',
     org: 'edX',
     orgImageUrl: '/asset-v1:edX+DemoX+Demo_Course+type@asset+block@org_image.jpg',
+    partnerLogoUrl: 'https://cdn.example.com/partner/logos/edx.png',
     advertisedStart: 'Winter 2025',
     content: {
       displayName: 'Demonstration Course',

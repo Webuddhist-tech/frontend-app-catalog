@@ -9,10 +9,13 @@ const HomeCourseCardSlot = ({ original: courseData, isLoading }: HomeCourseCardS
     courseId: courseData?.id,
     courseOrg: courseData?.data.org,
     courseName: courseData?.data.content.displayName,
-    courseNumber: courseData?.data.number,
     courseImageUrl: courseData?.data.imageUrl,
+    // The search index carries a logo but no institution name, so the card
+    // falls back to showing the course organization.
+    providerLogoUrl: courseData?.data.partnerLogoUrl || courseData?.data.orgImageUrl,
     courseStartDate: courseData?.data.start,
     courseAdvertisedStart: courseData?.data.advertisedStart,
+    showStartDate: true,
   };
 
   return (

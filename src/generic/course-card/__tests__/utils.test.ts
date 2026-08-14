@@ -24,6 +24,24 @@ describe('course-card utils', () => {
 
       expect(getFullImageUrl(imagePath)).toBe(expectedUrl);
     });
+
+    it('leaves an https URL untouched', () => {
+      const url = 'https://cdn.example.com/partner/logos/edx.png';
+
+      expect(getFullImageUrl(url)).toBe(url);
+    });
+
+    it('leaves an http URL untouched', () => {
+      const url = 'http://lms.example.com/asset-v1:edX+DemoX+Demo_Course+type@asset+block@image.jpg';
+
+      expect(getFullImageUrl(url)).toBe(url);
+    });
+
+    it('leaves a protocol-relative URL untouched', () => {
+      const url = '//cdn.example.com/partner/logos/edx.png';
+
+      expect(getFullImageUrl(url)).toBe(url);
+    });
   });
 
   describe('getStartDateDisplay', () => {

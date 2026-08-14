@@ -613,7 +613,7 @@ describe('CatalogPage', () => {
       const courseCard = courseCards[index];
 
       expect(within(courseCard).getByText(course.data.content.displayName)).toBeInTheDocument();
-      expect(within(courseCard).getByText(course.data.content.number)).toBeInTheDocument();
+      // The course number is no longer shown on the card; the org leads it.
       expect(within(courseCard).getByText(course.data.org)).toBeInTheDocument();
       expect(courseCard).toHaveAttribute('href', `/courses/${course.data.course}/about`);
     });

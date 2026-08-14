@@ -7,17 +7,23 @@ import { CourseCard } from '.';
 
 import messages from './messages';
 
+// Paragon renders one skeleton per card sub-component. The card always has an
+// image cap (which renders a second skeleton for the provider logo badge) and
+// a section; the footer only exists when a start date is shown.
+const SKELETONS_WITHOUT_DATE = 3;
+
 describe('CourseCard', () => {
-  const renderComponent = (course = mockCourseResponse) => render(
+  const renderComponent = (course = mockCourseResponse, props = {}) => render(
     <CourseCard
       courseId={course.id}
       courseOrg={course.data.org}
       courseName={course.data.content.displayName}
-      courseNumber={course.data.number}
       courseImageUrl={course.data.imageUrl}
       courseStartDate={course.data.start}
       courseAdvertisedStart={course.data.advertisedStart}
       isLoading={false}
+      showStartDate
+      {...props}
     />,
   );
 
@@ -26,7 +32,23 @@ describe('CourseCard', () => {
 
     expect(screen.getByText(mockCourseResponse.data.content.displayName)).toBeInTheDocument();
     expect(screen.getByText(mockCourseResponse.data.org)).toBeInTheDocument();
-    expect(screen.getByText(mockCourseResponse.data.number)).toBeInTheDocument();
+  });
+
+  it('prefers the provider name over the course org when both are given', () => {
+    renderComponent(mockCourseResponse, { providerName: 'Khyentse Foundation' });
+
+    expect(screen.getByText('Khyentse Foundation')).toBeInTheDocument();
+    expect(screen.queryByText(mockCourseResponse.data.org)).not.toBeInTheDocument();
+  });
+
+  it('renders the provider logo badge when a logo is given', () => {
+    renderComponent(mockCourseResponse, {
+      providerName: 'Khyentse Foundation',
+      providerLogoUrl: 'https://cdn.example.com/kf.png',
+    });
+
+    const logo = screen.getByAltText('Khyentse Foundation');
+    expect(logo).toHaveAttribute('src', 'https://cdn.example.com/kf.png');
   });
 
   it('displays advertisedStart when available', () => {
@@ -79,10 +101,16 @@ describe('CourseCard', () => {
     )).toBeInTheDocument();
   });
 
+  it('omits the start date unless it is asked for', () => {
+    renderComponent(mockCourseResponse, { showStartDate: false });
+
+    expect(screen.queryByText(/Starts:/)).not.toBeInTheDocument();
+  });
+
   it('renders course image with correct src and fallback', () => {
     renderComponent();
 
-    const image = screen.getByAltText(`${mockCourseResponse.data.content.displayName} ${mockCourseResponse.data.number}`);
+    const image = screen.getByAltText(mockCourseResponse.data.content.displayName);
     expect(image).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${mockCourseResponse.data.imageUrl}`);
   });
 
@@ -139,9 +167,7 @@ describe('CourseCard', () => {
     it('renders skeleton elements when loading', () => {
       renderLoadingComponent();
 
-      // Each CourseCard creates 4 skeleton elements (image, header, section, footer)
-      // So 1 card × 4 skeletons = 4 total skeleton elements
-      expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(4);
+      expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(SKELETONS_WITHOUT_DATE);
     });
 
     it('does not render as a link', () => {
@@ -162,7 +188,6 @@ describe('CourseCard', () => {
 
       expect(screen.queryByText(mockCourseResponse.data.content.displayName)).not.toBeInTheDocument();
       expect(screen.queryByText(mockCourseResponse.data.org)).not.toBeInTheDocument();
-      expect(screen.queryByText(mockCourseResponse.data.number)).not.toBeInTheDocument();
     });
 
     it('does not display start date when loading', () => {
@@ -174,8 +199,7 @@ describe('CourseCard', () => {
     it('does not display course image when loading', () => {
       renderLoadingComponent();
 
-      const imageAlt = `${mockCourseResponse.data.content.displayName} ${mockCourseResponse.data.number}`;
-      expect(screen.queryByAltText(imageAlt)).not.toBeInTheDocument();
+      expect(screen.queryByAltText(mockCourseResponse.data.content.displayName)).not.toBeInTheDocument();
     });
   });
 });

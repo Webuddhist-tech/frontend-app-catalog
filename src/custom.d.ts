@@ -24,3 +24,5 @@ declare module '*.gif' {
   const content: StaticImageData;
   export default content;
 }
+
+declare module '*.scss';

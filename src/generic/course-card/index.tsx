@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  Card, useMediaQuery, breakpoints, Badge,
+  Card, useMediaQuery, breakpoints,
 } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -15,18 +15,24 @@ export const CourseCard = ({
   courseId,
   courseOrg,
   courseName,
-  courseNumber,
   courseImageUrl,
+  providerName,
+  providerLogoUrl,
   courseStartDate,
   courseAdvertisedStart,
+  showStartDate = false,
 }: CourseCardProps) => {
   const intl = useIntl();
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.small.maxWidth });
 
-  const startDateDisplay = (courseStartDate || courseAdvertisedStart) ? getStartDateDisplay({
-    start: courseStartDate,
-    advertisedStart: courseAdvertisedStart,
-  }, intl) : null;
+  // The institution offering the course leads the card. Where that isn't known
+  // — the catalog search index carries a partner logo but no partner name —
+  // the course's organization stands in for it.
+  const providerLabel = providerName || courseOrg;
+
+  const startDateDisplay = showStartDate && (courseStartDate || courseAdvertisedStart)
+    ? getStartDateDisplay({ start: courseStartDate, advertisedStart: courseAdvertisedStart }, intl)
+    : null;
 
   return (
     <Card
@@ -42,24 +48,26 @@ export const CourseCard = ({
       <Card.ImageCap
         src={getFullImageUrl(courseImageUrl)}
         fallbackSrc={noCourseImg}
-        srcAlt={`${courseName} ${courseNumber}`}
+        srcAlt={courseName}
+        logoSrc={providerLogoUrl ? getFullImageUrl(providerLogoUrl) : undefined}
+        logoAlt={providerLabel}
+        // Always reserve the badge while loading, so the skeleton keeps the
+        // same shape as the card it becomes.
+        logoSkeleton
+        // Deliberately not lazy-loaded: Paragon keeps the image `display: none`
+        // until its onLoad fires, and a hidden image never counts as near the
+        // viewport, so lazy loading stalls the very event that reveals it.
         skeletonDuringImageLoad
       />
-      <Card.Header
-        title={courseName}
-        subtitle={(
-          <>
-            <div>{courseNumber}</div>
-            <Badge variant="light">{courseOrg}</Badge>
-          </>
-        )}
-        size="sm"
-      />
-      <Card.Section />
-      <Card.Footer textElement={startDateDisplay && intl.formatMessage(messages.startDate, {
-        startDate: startDateDisplay,
-      })}
-      />
+      <Card.Section className="course-card__meta">
+        {providerLabel && <p className="course-card__provider">{providerLabel}</p>}
+        <p className="course-card__title">{courseName}</p>
+      </Card.Section>
+      {startDateDisplay && (
+        <Card.Footer
+          textElement={intl.formatMessage(messages.startDate, { startDate: startDateDisplay })}
+        />
+      )}
     </Card>
   );
 };

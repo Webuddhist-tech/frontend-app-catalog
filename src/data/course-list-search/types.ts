@@ -13,6 +13,7 @@ export interface CourseListSearchResponse {
       imageUrl: string;
       org: string;
       orgImageUrl?: string;
+      partnerLogoUrl?: string;
       advertisedStart?: string;
       content: {
         displayName: string;

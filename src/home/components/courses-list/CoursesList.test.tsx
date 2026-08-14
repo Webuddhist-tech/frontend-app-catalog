@@ -62,9 +62,10 @@ describe('<CoursesList />', () => {
     render(<CoursesList />);
 
     expect(screen.getAllByTestId('course-card')).toHaveLength(2);
-    // Each CourseCard creates 4 skeleton elements (image, header, section, footer)
-    // So 2 cards × 4 skeletons = 8 total skeleton elements
-    expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(8);
+    // Each loading CourseCard creates 3 skeleton elements (image, logo badge,
+    // section) — there is no footer until a start date is known.
+    // So 2 cards × 3 skeletons = 6 total skeleton elements
+    expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(6);
   });
 
   it('shows default number of skeleton cards when max courses not configured', () => {
@@ -83,9 +84,10 @@ describe('<CoursesList />', () => {
     expect(screen.getByTestId('courses-list-loading')).toBeInTheDocument();
 
     expect(screen.getAllByTestId('course-card')).toHaveLength(9);
-    // Each CourseCard creates 4 skeleton elements (image, header, section, footer)
-    // So 9 cards × 4 skeletons = 36 total skeleton elements
-    expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(36);
+    // Each loading CourseCard creates 3 skeleton elements (image, logo badge,
+    // section) — there is no footer until a start date is known.
+    // So 9 cards × 3 skeletons = 27 total skeleton elements
+    expect(document.querySelectorAll('.react-loading-skeleton')).toHaveLength(27);
   });
 
   it('shows empty courses state', () => {

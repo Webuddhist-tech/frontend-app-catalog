@@ -6,10 +6,17 @@ import type { Course } from './types';
 
 /**
  * Constructs a full URL for an image by combining the LMS base URL with the provided image path.
+ *
+ * Paths that are already absolute are returned untouched — provider logos are
+ * served straight from object storage, and the homepage categories endpoint
+ * absolutizes its image URLs server-side.
  */
 export const getFullImageUrl = (path?: string) => {
   if (!path) {
     return '';
+  }
+  if (/^(https?:)?\/\//i.test(path)) {
+    return path;
   }
   return `${getConfig().LMS_BASE_URL}${path}`;
 };

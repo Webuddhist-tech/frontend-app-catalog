@@ -147,7 +147,7 @@ describe('HomePage', () => {
         const course = mockCourseListSearchResponse.results[index];
         const cardContent = within(card);
 
-        const courseImage = cardContent.getByAltText(`${course.data.content.displayName} ${course.data.number}`);
+        const courseImage = cardContent.getByAltText(course.data.content.displayName);
         expect(courseImage).toHaveAttribute('src', `${getConfig().LMS_BASE_URL}${course.data.imageUrl}`);
       });
     });
@@ -166,8 +166,9 @@ describe('HomePage', () => {
         const cardContent = within(card);
 
         expect(cardContent.getByText(course.data.content.displayName)).toBeInTheDocument();
+        // The org stands in for the institution name, which the search index
+        // does not carry. The course number is no longer shown on the card.
         expect(cardContent.getByText(course.data.org)).toBeInTheDocument();
-        expect(cardContent.getByText(course.data.number)).toBeInTheDocument();
       });
     });
 
