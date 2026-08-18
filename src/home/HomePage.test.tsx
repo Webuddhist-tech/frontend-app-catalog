@@ -1,22 +1,19 @@
 import { getConfig } from '@edx/frontend-platform';
 
 import {
-  render, screen, waitFor, userEvent, within,
+  render, screen, waitFor, within,
 } from '@src/setupTest';
-import genericMessages from '@src/generic/video-modal/messages';
 import courseCardMessages from '@src/generic/course-card/messages';
 import { useCourseListSearch } from '@src/data/course-list-search/hooks';
+import { useHeroCourses } from '@src/data/hero-courses/hooks';
 import { mockCourseListSearchResponse } from '@src/__mocks__';
-import {
-  IFRAME_FEATURE_POLICY, DEFAULT_VIDEO_MODAL_HEIGHT, DATE_FORMAT_OPTIONS,
-} from '../constants';
+import { DATE_FORMAT_OPTIONS } from '../constants';
 import HomePage from './HomePage';
 import messages from './components/home-banner/messages';
 
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
     SITE_NAME: process.env.SITE_NAME,
-    HOMEPAGE_PROMO_VIDEO_YOUTUBE_ID: process.env.HOMEPAGE_PROMO_VIDEO_YOUTUBE_ID,
     ENABLE_COURSE_DISCOVERY: process.env.ENABLE_COURSE_DISCOVERY,
   })),
   ensureConfig: jest.fn(),
@@ -26,7 +23,12 @@ jest.mock('@src/data/course-list-search/hooks', () => ({
   useCourseListSearch: jest.fn(),
 }));
 
+jest.mock('@src/data/hero-courses/hooks', () => ({
+  useHeroCourses: jest.fn(),
+}));
+
 const mockCourseListSearch = useCourseListSearch as jest.Mock;
+const mockUseHeroCourses = useHeroCourses as jest.Mock;
 
 describe('HomePage', () => {
   mockCourseListSearch.mockReturnValue({
@@ -34,6 +36,10 @@ describe('HomePage', () => {
     isLoading: false,
     isError: false,
   });
+
+  // Empty, so the hero adds no cards of its own and the course-grid assertions
+  // below can keep counting every link on the page.
+  mockUseHeroCourses.mockReturnValue({ data: [], isLoading: false, isError: false });
 
   it('sets correct document title', async () => {
     render(<HomePage />);
@@ -46,54 +52,21 @@ describe('HomePage', () => {
   it('renders without crashing', () => {
     render(<HomePage />);
 
-    expect(screen.getByText(
-      messages.title.defaultMessage.replace('{siteName}', process.env.SITE_NAME),
-    )).toBeInTheDocument();
-    expect(screen.getByText(messages.subtitle.defaultMessage)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: messages.videoButton.defaultMessage })).toBeInTheDocument();
+    // The heading holds the site name inside an accent element, so it is
+    // asserted by text content rather than as one contiguous string.
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      `Welcome to ${process.env.SITE_NAME}`,
+    );
+    expect(screen.getByText(messages.eyebrowSignedOut.defaultMessage)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage)).toBeInTheDocument();
     expect(screen.getByTestId('home-banner')).toBeInTheDocument();
   });
 
-  it('opens video modal with YouTube iframe when video button is clicked', async () => {
-    render(<HomePage />);
-    expect(screen.getByTestId('home-banner')).toBeInTheDocument();
-
-    const videoBtn = screen.getByRole('button', { name: messages.videoButton.defaultMessage });
-    userEvent.click(videoBtn);
-
-    await waitFor(() => {
-      const videoModal = screen.getByRole('dialog');
-      expect(videoModal).toBeInTheDocument();
-      const iframe = screen.getByTitle(genericMessages.videoIframeTitle.defaultMessage);
-      expect(screen.getByLabelText(genericMessages.videoModalTitle.defaultMessage)).toBeInTheDocument();
-      expect(iframe).toHaveAttribute('src', `//www.youtube.com/embed/${process.env.HOMEPAGE_PROMO_VIDEO_YOUTUBE_ID}?showinfo=0`);
-      expect(iframe).toHaveAttribute('allow', IFRAME_FEATURE_POLICY);
-      expect(iframe).toHaveAttribute('width', 'auto');
-      expect(iframe).toHaveAttribute('height', `${DEFAULT_VIDEO_MODAL_HEIGHT}`);
-      expect(iframe).toHaveAttribute('frameborder', '0');
-      expect(iframe).toHaveAttribute('allowfullscreen');
-    });
-  });
-
-  it('should close video modal when Escape key is pressed and return focus to button', async () => {
+  it('no longer renders the promo video button', () => {
     render(<HomePage />);
 
-    const videoBtn = screen.getByRole('button', { name: messages.videoButton.defaultMessage });
-    userEvent.click(videoBtn);
-
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
-
-    userEvent.keyboard('{Escape}');
-
-    await waitFor(() => {
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const videoButtonAfterClose = screen.getByRole('button', { name: messages.videoButton.defaultMessage });
-      expect(videoButtonAfterClose).toBeInTheDocument();
-      expect(videoButtonAfterClose).toHaveFocus();
-    });
+    expect(screen.queryByRole('button', { name: messages.videoButton.defaultMessage })).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('should not pass enableCourseDiscovery to HomeBanner', () => {

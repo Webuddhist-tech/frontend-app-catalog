@@ -4,7 +4,8 @@ export interface AuthenticatedUserTypes {
   username: string;
   roles: string[];
   administrator: boolean;
-  name: string;
+  /** The user's full name. Null for accounts with no profile (e.g. service users). */
+  name?: string | null;
 }
 
 export interface ConfigTypes {

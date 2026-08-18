@@ -1,30 +1,50 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  eyebrowSignedOut: {
+    id: 'catalog.home-page.eyebrow-signed-out',
+    defaultMessage: 'Buddhist Learning Platform',
+    description: 'Small label above the home page heading, shown to signed-out visitors.',
+  },
+  eyebrowSignedIn: {
+    id: 'catalog.home-page.eyebrow-signed-in',
+    defaultMessage: 'Continue your practice',
+    description: 'Small label above the home page heading, shown to a signed-in learner.',
+  },
   title: {
     id: 'catalog.home-page.title',
-    defaultMessage: 'Welcome to {siteName}',
-    description: 'Main heading text displayed at the banner of the home page.',
+    defaultMessage: 'Welcome to <accent>{siteName}</accent>',
+    description: 'Main home page heading for signed-out visitors. The accent tag styles the site name.',
   },
-  subtitle: {
-    id: 'catalog.home-page.subtitle',
-    defaultMessage: 'It works! Powered by the Open edX® Platform',
-    description: 'Secondary text displayed below the main heading on the home page.',
+  welcomeBack: {
+    id: 'catalog.home-page.welcome-back',
+    defaultMessage: 'Welcome back, <accent>{name}</accent>',
+    description: 'Main home page heading for a signed-in learner. The accent tag styles their name.',
   },
   searchPlaceholder: {
     id: 'catalog.home-page.search-placeholder',
-    defaultMessage: 'Search for a course',
+    defaultMessage: 'What would you like to learn?',
     description: 'Placeholder text inside the course search input field.',
+  },
+  heroCourses: {
+    id: 'catalog.home-page.hero-courses',
+    defaultMessage: 'Featured courses',
+    description: 'Accessible label for the pair of course cards beside the home page heading.',
+  },
+  newCourse: {
+    id: 'catalog.home-page.new-course',
+    defaultMessage: 'New course',
+    description: 'Badge on a home page hero card marking a recently added course.',
+  },
+  providerLogoAlt: {
+    id: 'catalog.home-page.provider-logo-alt',
+    defaultMessage: '{providerName} logo',
+    description: 'Alternative text for the institution logo on a home page course card.',
   },
   videoButton: {
     id: 'catalog.home-page.video-button',
     defaultMessage: 'View promo video',
     description: 'Label for the button that opens the promotional video modal.',
-  },
-  videoButtonAlt: {
-    id: 'catalog.home-page.video-button-alt',
-    defaultMessage: 'search button',
-    description: 'Alternative text for the promo video button (for screen readers).',
   },
 });
 

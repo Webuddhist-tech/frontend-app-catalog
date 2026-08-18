@@ -24,6 +24,10 @@ jest.mock('./data/course-list-search/hooks', () => ({
   useCourseListSearch: jest.fn(),
 }));
 
+jest.mock('./data/hero-courses/hooks', () => ({
+  useHeroCourses: jest.fn(() => ({ data: [], isLoading: false, isError: false })),
+}));
+
 jest.mock('./course-about/data/hooks', () => ({
   useCourseAboutData: jest.fn(),
   useEnrollment: jest.fn(() => jest.fn()),
@@ -37,6 +41,9 @@ const mockCourseListSearch = useCourseListSearch as jest.Mock;
 const mockCourseAbout = useCourseAboutData as jest.Mock;
 
 jest.mock('@edx/frontend-platform/react', () => ({
+  // AppContext is kept real so components reading the signed-in user off it
+  // still work; only the provider is stubbed out.
+  ...jest.requireActual('@edx/frontend-platform/react'),
   AppProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="app-provider">{children}</div>,
 }));
 
