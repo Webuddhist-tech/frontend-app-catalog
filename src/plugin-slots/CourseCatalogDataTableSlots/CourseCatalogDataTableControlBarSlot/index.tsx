@@ -1,6 +1,7 @@
 import { PluginSlot } from '@openedx/frontend-plugin-framework';
 import { DataTable } from '@openedx/paragon';
 
+import FilterChips from '@src/catalog/components/FilterChips';
 import type { CourseCatalogDataTableControlBarSlotProps } from './types';
 
 const CourseCatalogDataTableControlBarSlot = ({
@@ -18,6 +19,7 @@ const CourseCatalogDataTableControlBarSlot = ({
     }}
   >
     <DataTable.TableControlBar />
+    <FilterChips />
   </PluginSlot>
 );
 

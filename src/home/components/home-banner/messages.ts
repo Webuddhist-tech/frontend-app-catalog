@@ -21,11 +21,6 @@ const messages = defineMessages({
     defaultMessage: 'Welcome back, <accent>{name}</accent>',
     description: 'Main home page heading for a signed-in learner. The accent tag styles their name.',
   },
-  searchPlaceholder: {
-    id: 'catalog.home-page.search-placeholder',
-    defaultMessage: 'What would you like to learn?',
-    description: 'Placeholder text inside the course search input field.',
-  },
   heroCourses: {
     id: 'catalog.home-page.hero-courses',
     defaultMessage: 'Featured courses',

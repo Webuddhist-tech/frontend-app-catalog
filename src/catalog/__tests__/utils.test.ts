@@ -1,8 +1,8 @@
-import { CheckboxFilter } from '@openedx/paragon';
 import { IntlShape, createIntl } from '@edx/frontend-platform/i18n';
 
 import { mockCourseListSearchResponse } from '@src/__mocks__';
 import type { DataTableFilter } from '@src/data/course-list-search/types';
+import CollapsibleFilterGroup from '../components/CollapsibleFilterGroup';
 import { compareFilters, transformAggregationsToFilterChoices } from '../utils';
 import messages from '../messages';
 
@@ -31,7 +31,7 @@ describe('utils', () => {
       const result = transformAggregationsToFilterChoices(aggs, intl);
 
       expect(result).toHaveLength(Object.keys(aggs).length); // language, modes, org
-      expect(result.every(column => column.Filter === CheckboxFilter)).toBe(true);
+      expect(result.every(column => column.Filter === CollapsibleFilterGroup)).toBe(true);
       expect(result.every(column => column.filter === 'includesValue')).toBe(true);
     });
 

@@ -7,6 +7,7 @@ import courseCardMessages from '@src/generic/course-card/messages';
 import { useCourseListSearch } from '@src/data/course-list-search/hooks';
 import { useHeroCourses } from '@src/data/hero-courses/hooks';
 import { mockCourseListSearchResponse } from '@src/__mocks__';
+import sharedMessages from '@src/generic/messages';
 import { DATE_FORMAT_OPTIONS } from '../constants';
 import HomePage from './HomePage';
 import messages from './components/home-banner/messages';
@@ -58,7 +59,7 @@ describe('HomePage', () => {
       `Welcome to ${process.env.SITE_NAME}`,
     );
     expect(screen.getByText(messages.eyebrowSignedOut.defaultMessage)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage)).toBeInTheDocument();
     expect(screen.getByTestId('home-banner')).toBeInTheDocument();
   });
 
@@ -77,7 +78,9 @@ describe('HomePage', () => {
     render(<HomePage />);
     expect(screen.getByTestId('home-banner')).toBeInTheDocument();
     expect(screen.queryByRole('search')).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText(messages.searchPlaceholder.defaultMessage)).not.toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage),
+    ).not.toBeInTheDocument();
   });
 
   describe('CoursesList', () => {

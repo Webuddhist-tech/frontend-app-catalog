@@ -8,8 +8,8 @@ import { ROUTES } from '@src/routes';
 import HomeOverlayHtmlSlot from '@src/plugin-slots/HomeOverlayHtmlSlot';
 import { HomePromoVideoButtonSlot, HomePromoVideoModalSlot } from '@src/plugin-slots/HomePromoVideoSlots';
 
+import sharedMessages from '@src/generic/messages';
 import HomeHeroCards from './HomeHeroCards';
-import messages from './messages';
 
 /**
  * The home page hero: a greeting and course search on one side, a pair of
@@ -28,7 +28,7 @@ const HomeBanner = () => {
       {/* No external submit button, unlike the catalog page's search: the hero
           field is styled as a single pill and submits on Enter. */}
       <SearchField
-        placeholder={intl.formatMessage(messages.searchPlaceholder)}
+        placeholder={intl.formatMessage(sharedMessages.courseSearchPlaceholder)}
         value={searchValue}
         onChange={(value: string) => setSearchValue(value)}
         onSubmit={handleSearch}

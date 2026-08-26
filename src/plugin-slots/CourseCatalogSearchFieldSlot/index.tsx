@@ -1,10 +1,12 @@
 import { PluginSlot } from '@openedx/frontend-plugin-framework';
-import { breakpoints, SearchField, useMediaQuery } from '@openedx/paragon';
+import {
+  breakpoints, Form, SearchField, useMediaQuery,
+} from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 
-import messages from '@src/catalog/messages';
+import sharedMessages from '@src/generic/messages';
 import type { CourseCatalogSearchFieldSlotProps } from './types';
 
 const CourseCatalogSearchFieldSlot = ({
@@ -28,22 +30,25 @@ const CourseCatalogSearchFieldSlot = ({
       }}
     >
       {getConfig().ENABLE_COURSE_DISCOVERY && (
-        <SearchField
+        <Form.Group
           key="search-field"
-          className={classNames({
-            'w-auto mx-2.5 mb-0': isMedium,
-            'mb-4 w-25': !isMedium,
+          className={classNames('catalog-page-head__search', {
+            'mx-2.5 mb-4': isMedium,
+            'mb-5': !isMedium,
           })}
-          placeholder={intl.formatMessage(messages.searchPlaceholder)}
-          onChange={(value: string) => {
-            setSearchInput(value);
-          }}
-          onSubmit={(value: string) => {
-            setSearchInput(value);
-            handleSearch(value);
-          }}
-          value={initialSearchValue}
-        />
+        >
+          <SearchField
+            placeholder={intl.formatMessage(sharedMessages.courseSearchPlaceholder)}
+            onChange={(value: string) => {
+              setSearchInput(value);
+            }}
+            onSubmit={(value: string) => {
+              setSearchInput(value);
+              handleSearch(value);
+            }}
+            value={initialSearchValue}
+          />
+        </Form.Group>
       )}
     </PluginSlot>
   );

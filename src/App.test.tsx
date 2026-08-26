@@ -1,7 +1,6 @@
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import { mockCourseListSearchResponse, mockCourseAboutResponse } from './__mocks__';
-import messages from './catalog/messages';
 import { useCourseListSearch } from './data/course-list-search/hooks';
 import { useCourseAboutData } from './course-about/data/hooks';
 import courseAboutIntroMessages from './course-about/course-intro/messages';
@@ -101,7 +100,7 @@ describe('App', () => {
       expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText(messages.exploreCourses.defaultMessage)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Discover new');
 
     const courseCards = screen.getAllByRole('link');
     expect(courseCards.length).toBe(mockCourseListSearchResponse.results.length);

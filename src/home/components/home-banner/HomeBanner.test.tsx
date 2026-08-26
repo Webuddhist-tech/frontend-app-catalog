@@ -3,6 +3,7 @@ import {
   render, userEvent, cleanup, screen, reactRouter,
 } from '@src/setupTest';
 import { useHeroCourses } from '@src/data/hero-courses/hooks';
+import sharedMessages from '@src/generic/messages';
 import HomeBanner from './HomeBanner';
 
 import messages from './messages';
@@ -35,7 +36,7 @@ describe('<HomeBanner />', () => {
     jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(mockNavigate);
 
     render(<HomeBanner />);
-    const input = screen.getByPlaceholderText(messages.searchPlaceholder.defaultMessage);
+    const input = screen.getByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage);
 
     await userEvent.type(input, 'some_text{enter}');
 

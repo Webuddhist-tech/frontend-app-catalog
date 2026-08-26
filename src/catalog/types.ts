@@ -1,6 +1,6 @@
 import { IntlShape } from '@edx/frontend-platform/i18n';
 
-export interface GetPageTitleProps {
+export interface GetSearchTitleProps {
   intl: IntlShape;
   searchString: string;
   courseDataResultsLength?: number;
