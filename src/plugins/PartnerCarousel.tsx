@@ -68,7 +68,7 @@ const TITLE_ID = 'partner-carousel-title';
 
 const PartnerCarousel = () => {
   const intl = useIntl();
-  const { data } = usePartners();
+  const { data, isLoading } = usePartners();
   const partners = useMemo(() => usableLogos(data ?? []), [data]);
   // Index of the leftmost visible logo. Grows/shrinks without bound — `mod`
   // maps it back onto the list, so there is no end to run into and therefore
@@ -108,7 +108,17 @@ const PartnerCarousel = () => {
     track.style.transition = '';
   }, [startIndex]);
 
-  if (partners.length === 0) {
+  // Handle hash scrolling on initial load. Since the title is rendered synchronously 
+  // on mount (even while loading), this effect finds the element and scrolls to it 
+  // before the first paint, preventing any "glitch" or flash of the top of the page.
+  useLayoutEffect(() => {
+    if (window.location.hash === `#${TITLE_ID}`) {
+      // Use block: 'start' to respect the CSS scroll-margin-top
+      document.getElementById(TITLE_ID)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+  }, []);
+
+  if (!isLoading && partners.length === 0) {
     return null;
   }
 
@@ -147,40 +157,44 @@ const PartnerCarousel = () => {
         {intl.formatMessage(messages.title)}
       </p>
       <div className="partner-carousel__row">
-        {canScroll && (
-          <Arrow label="Previous partners" path="15 18 9 12 15 6" onClick={() => shift === 0 && setShift(-1)} />
-        )}
-        <div className="partner-carousel__viewport">
-          <div
-            className="partner-carousel__track"
-            ref={trackRef}
-            style={{ transform: `translateX(calc(-100% * ${offsetSteps} / ${windowSize}))` }}
-          >
-            {slots.map(({ index, partner }) => {
-              const logo = (
-                <img
-                  className="partner-carousel__logo"
-                  src={partner.logo as string}
-                  alt={partner.partnerName}
-                />
-              );
+        {!isLoading && (
+          <>
+            {canScroll && (
+              <Arrow label="Previous partners" path="15 18 9 12 15 6" onClick={() => shift === 0 && setShift(-1)} />
+            )}
+            <div className="partner-carousel__viewport">
+              <div
+                className="partner-carousel__track"
+                ref={trackRef}
+                style={{ transform: `translateX(calc(-100% * ${offsetSteps} / ${windowSize}))` }}
+              >
+                {slots.map(({ index, partner }) => {
+                  const logo = (
+                    <img
+                      className="partner-carousel__logo"
+                      src={partner.logo as string}
+                      alt={partner.partnerName}
+                    />
+                  );
 
-              return partner.slug ? (
-                <a
-                  key={index}
-                  className="partner-carousel__item"
-                  href={`${lmsBaseUrl}/schools/${partner.slug}/`}
-                >
-                  {logo}
-                </a>
-              ) : (
-                <span key={index} className="partner-carousel__item">{logo}</span>
-              );
-            })}
-          </div>
-        </div>
-        {canScroll && (
-          <Arrow label="Next partners" path="9 18 15 12 9 6" onClick={() => shift === 0 && setShift(1)} />
+                  return partner.slug ? (
+                    <a
+                      key={index}
+                      className="partner-carousel__item"
+                      href={`${lmsBaseUrl}/schools/${partner.slug}/`}
+                    >
+                      {logo}
+                    </a>
+                  ) : (
+                    <span key={index} className="partner-carousel__item">{logo}</span>
+                  );
+                })}
+              </div>
+            </div>
+            {canScroll && (
+              <Arrow label="Next partners" path="9 18 15 12 9 6" onClick={() => shift === 0 && setShift(1)} />
+            )}
+          </>
         )}
       </div>
     </div>
