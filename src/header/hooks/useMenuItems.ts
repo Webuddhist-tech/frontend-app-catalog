@@ -9,6 +9,13 @@ import { programsUrl } from '@src/utils';
 import type { AppContextTypes, MenuItem } from '../types';
 import messages from '../messages';
 
+/**
+ * The wishlist lives on the LMS rather than in this MFE, so it is not one of ROUTES.
+ * Resolves against LMS_BASE_URL, which is local.openedx.io in development and the
+ * site domain in production.
+ */
+const WISHLIST_PATH = '/wishlist/';
+
 export const useMenuItems = () => {
   const intl = useIntl();
   const location = useLocation();
@@ -22,6 +29,7 @@ export const useMenuItems = () => {
       href: `${getConfig().LMS_BASE_URL}${ROUTES.COURSES}`,
       content: intl.formatMessage(messages.exploreCourses),
       isActive: isCourseCatalogPage,
+      iconName: 'discover' as const,
     }] : []),
   ];
 
@@ -29,19 +37,28 @@ export const useMenuItems = () => {
     {
       type: 'item' as const,
       href: `${getConfig().LMS_BASE_URL}/dashboard`,
-      content: intl.formatMessage(messages.courses),
+      content: intl.formatMessage(messages.dashboard),
+      iconName: 'dashboard' as const,
     },
     ...(getConfig().ENABLE_PROGRAMS ? [{
       type: 'item' as const,
       href: programsUrl(),
       content: intl.formatMessage(messages.programs),
+      iconName: 'programs' as const,
     }] : []),
     ...(!getConfig().NON_BROWSABLE_COURSES ? [{
       type: 'item' as const,
       href: `${getConfig().LMS_BASE_URL}${ROUTES.COURSES}`,
       content: intl.formatMessage(messages.discoverNew),
       isActive: isCourseCatalogPage,
+      iconName: 'discover' as const,
     }] : []),
+    {
+      type: 'item' as const,
+      href: `${getConfig().LMS_BASE_URL}${WISHLIST_PATH}`,
+      content: intl.formatMessage(messages.wishlist),
+      iconName: 'wishlist' as const,
+    },
   ];
 
   const getSecondaryMenu = (): MenuItem[] => [

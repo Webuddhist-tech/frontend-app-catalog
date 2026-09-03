@@ -8,6 +8,8 @@ module.config.js
 
 dist/
 src/i18n/transifex_input.json
+src/i18n/messages/
+src/i18n/index.js
 temp/babel-plugin-react-intl
 
 ### pyenv ###

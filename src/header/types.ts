@@ -22,4 +22,6 @@ export interface MenuItem {
   href: string;
   content: string;
   isActive?: boolean;
+  /** Names the leading glyph the header shows for this row in its mobile menu. */
+  iconName?: 'dashboard' | 'discover' | 'wishlist' | 'programs';
 }

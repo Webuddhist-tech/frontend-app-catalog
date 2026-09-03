@@ -62,29 +62,52 @@ describe('useMenuItems', () => {
       href: `${getConfig().LMS_BASE_URL}${ROUTES.COURSES}`,
       content: messages.exploreCourses.defaultMessage,
       isActive: false,
+      iconName: 'discover',
     });
   });
 
   it('should return correct menu items for authenticated user', () => {
     const { result } = renderWithAppContext({ username: 'testuser' });
 
-    expect(result.current.mainMenu).toHaveLength(3);
+    expect(result.current.mainMenu).toHaveLength(4);
     expect(result.current.mainMenu[0]).toEqual({
       type: 'item',
       href: `${getConfig().LMS_BASE_URL}/dashboard`,
-      content: messages.courses.defaultMessage,
+      content: messages.dashboard.defaultMessage,
+      iconName: 'dashboard',
     });
     expect(result.current.mainMenu[1]).toEqual({
       type: 'item',
       href: expect.stringContaining('/programs'),
       content: messages.programs.defaultMessage,
+      iconName: 'programs',
     });
     expect(result.current.mainMenu[2]).toEqual({
       type: 'item',
       href: `${getConfig().LMS_BASE_URL}${ROUTES.COURSES}`,
       content: messages.discoverNew.defaultMessage,
       isActive: false,
+      iconName: 'discover',
     });
+    expect(result.current.mainMenu[3]).toEqual({
+      type: 'item',
+      href: `${getConfig().LMS_BASE_URL}/wishlist/`,
+      content: messages.wishlist.defaultMessage,
+      iconName: 'wishlist',
+    });
+  });
+
+  it('should derive the wishlist link from LMS_BASE_URL rather than hardcoding it', () => {
+    (getConfig as jest.Mock).mockReturnValue({
+      ...DEFAULT_CONFIG,
+      LMS_BASE_URL: 'https://example.test',
+    });
+
+    const { result } = renderWithAppContext({ username: 'testuser' });
+
+    expect(result.current.mainMenu).toContainEqual(
+      expect.objectContaining({ href: 'https://example.test/wishlist/' }),
+    );
   });
 
   it('should not include programs menu item when ENABLE_PROGRAMS is false', () => {
@@ -95,7 +118,7 @@ describe('useMenuItems', () => {
 
     const { result } = renderWithAppContext({ username: 'testuser' });
 
-    expect(result.current.mainMenu).toHaveLength(2);
+    expect(result.current.mainMenu).toHaveLength(3);
     expect(result.current.mainMenu.some(item => item.content === messages.programs.defaultMessage)).toBe(false);
   });
 
