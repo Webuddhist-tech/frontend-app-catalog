@@ -24,6 +24,12 @@ describe('<VideoModal />', () => {
     expect(getByTestId('test-content')).toBeInTheDocument();
   });
 
+  it('carries the video-modal class so the brand stylesheet can size its iframe responsively', () => {
+    const { getByRole } = render(<VideoModal {...videoModalProps} />);
+
+    expect(getByRole('dialog')).toHaveClass('video-modal');
+  });
+
   it('does not render modal when isOpen is false', () => {
     const { queryByLabelText } = render(<VideoModal {...videoModalProps} isOpen={false} />);
 

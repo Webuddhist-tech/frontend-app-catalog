@@ -15,11 +15,15 @@ import { StatusMessage } from './StatusMessage';
 // yet.
 export const EnrolledStatus = ({ courseId, enrollmentMode }: EnrolledStatusTypes) => {
   const intl = useIntl();
-  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.small.maxWidth });
+  // "large" rather than "small": side by side, the status pill and the
+  // button were squeezing each other down to an uncomfortably narrow width
+  // well before running out of room outright — laptop-width screens, not
+  // just phone ones.
+  const isCompact = useMediaQuery({ maxWidth: breakpoints.large.maxWidth });
   const isVerified = enrollmentMode === 'verified';
 
   return (
-    <Stack direction={isExtraSmall ? 'vertical' : 'horizontal'} gap={isExtraSmall ? 2 : 5}>
+    <Stack direction={isCompact ? 'vertical' : 'horizontal'} gap={isCompact ? 2 : 5}>
       <StatusMessage
         variant={STATUS_MESSAGE_VARIANTS.SUCCESS}
         messageKey={isVerified ? 'statusMessagePurchased' : 'statusMessageEnrolled'}

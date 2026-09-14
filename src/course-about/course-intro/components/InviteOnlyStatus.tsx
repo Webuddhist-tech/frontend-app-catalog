@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Stack, IconButton, OverlayTrigger, Tooltip, ModalDialog, useToggle,
+  breakpoints, Stack, IconButton, OverlayTrigger, Tooltip, ModalDialog, useToggle, useMediaQuery,
 } from '@openedx/paragon';
 import { HelpOutline } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
@@ -20,6 +20,11 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
   const intl = useIntl();
   const [isModalOpen, openModal, closeModal] = useToggle(false);
   const [inviteInstructions, setInviteInstructions] = useState<string | null>(null);
+  // Matches EnrolledStatus's own threshold, so every one of these status
+  // rows switches to stacked at the same point rather than each picking its
+  // own — side by side, the pill was squeezing the buttons well before
+  // actually running out of room, on laptop-width screens, not just phones.
+  const isCompact = useMediaQuery({ maxWidth: breakpoints.large.maxWidth });
 
   useEffect(() => {
     getInviteInstructions(courseId)
@@ -29,26 +34,34 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
 
   return (
     <>
-      <Stack direction="horizontal" gap={3} className="flex-wrap">
-        <StatusMessage
-          variant={STATUS_MESSAGE_VARIANTS.INFO}
-          messageKey="statusMessageEnrollmentInvitationOnly"
-        />
-        <OverlayTrigger
-          placement="top"
-          overlay={(
-            <Tooltip id="invite-info-tooltip" className="course-about-social-tooltip">
-              {intl.formatMessage(messages.howToGetInviteBtn)}
-            </Tooltip>
-          )}
-        >
-          <IconButton
-            src={HelpOutline}
-            alt={intl.formatMessage(messages.howToGetInviteBtn)}
-            onClick={openModal}
-            className="course-about-invite-info-btn"
+      <Stack direction={isCompact ? 'vertical' : 'horizontal'} gap={isCompact ? 2 : 3}>
+        {/*
+          The info button explains this message, so it stays glued to it on
+          the same line no matter what — it's the Wishlist button (a wholly
+          separate action) that moves to its own line once space is tight,
+          not this one.
+        */}
+        <Stack direction="horizontal" gap={2}>
+          <StatusMessage
+            variant={STATUS_MESSAGE_VARIANTS.INFO}
+            messageKey="statusMessageEnrollmentInvitationOnly"
           />
-        </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={(
+              <Tooltip id="invite-info-tooltip" className="course-about-social-tooltip">
+                {intl.formatMessage(messages.howToGetInviteBtn)}
+              </Tooltip>
+            )}
+          >
+            <IconButton
+              src={HelpOutline}
+              alt={intl.formatMessage(messages.howToGetInviteBtn)}
+              onClick={openModal}
+              className="course-about-invite-info-btn"
+            />
+          </OverlayTrigger>
+        </Stack>
         <CourseAboutWishlistButtonSlot courseId={courseId} />
       </Stack>
       <ModalDialog
