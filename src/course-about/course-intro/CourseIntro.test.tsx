@@ -46,6 +46,23 @@ describe('CourseIntro', () => {
     expect(screen.getByText(mockCourseAboutResponse.org)).toBeInTheDocument();
   });
 
+  it('does not give an English title the Tibetan line-height modifier', () => {
+    render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
+
+    expect(screen.getByText(mockCourseAboutResponse.name)).not.toHaveClass('course-about-intro-title--tibetan');
+  });
+
+  it('gives a Tibetan title the Tibetan line-height modifier', () => {
+    const tibetanTitleCourseData = {
+      ...mockCourseAboutResponse,
+      name: 'སངས་རྒྱས་རྒྱལ་མཚན།',
+    };
+
+    render(<CourseIntro courseAboutData={tibetanTitleCourseData} />);
+
+    expect(screen.getByText(tibetanTitleCourseData.name)).toHaveClass('course-about-intro-title--tibetan');
+  });
+
   it('renders enrollment button for eligible users', async () => {
     render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
 

@@ -1,7 +1,7 @@
 import { getConfig } from '@edx/frontend-platform';
 
 import {
-  resolveUrl, baseAppUrl, programsUrl, getCookie,
+  resolveUrl, baseAppUrl, programsUrl, getCookie, containsTibetanScript,
 } from './utils';
 
 jest.mock('@edx/frontend-platform', () => ({
@@ -122,6 +122,24 @@ describe('utils', () => {
       });
 
       expect(getCookie('testCookie')).toBe('testValue');
+    });
+  });
+
+  describe('containsTibetanScript', () => {
+    it('returns true for Tibetan text', () => {
+      expect(containsTibetanScript('སངས་རྒྱས་རྒྱལ།')).toBe(true);
+    });
+
+    it('returns false for Latin text', () => {
+      expect(containsTibetanScript('Lionel')).toBe(false);
+    });
+
+    it('returns false for CJK text', () => {
+      expect(containsTibetanScript('許俊賢')).toBe(false);
+    });
+
+    it('returns true when only part of the text is Tibetan', () => {
+      expect(containsTibetanScript('Welcome to Site, སངས་རྒྱས།')).toBe(true);
     });
   });
 });

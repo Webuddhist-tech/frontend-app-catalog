@@ -5,7 +5,8 @@ import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 
 import type { AppContextTypes } from '@src/header/types';
-import { containsTibetanScript, getGreetingName } from './utils';
+import { containsTibetanScript } from '@src/utils';
+import { getGreetingName } from './utils';
 import messages from './messages';
 
 /**
