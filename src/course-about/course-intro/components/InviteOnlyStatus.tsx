@@ -1,24 +1,31 @@
+import { useEffect, useState } from 'react';
 import {
   Stack, IconButton, OverlayTrigger, Tooltip, ModalDialog, useToggle,
 } from '@openedx/paragon';
 import { HelpOutline } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { logError } from '@edx/frontend-platform/logging';
 
 import CourseAboutWishlistButtonSlot from '@src/plugin-slots/CourseAboutWishlistButtonSlot';
+import { hasVisibleHtmlContent } from '../../utils';
+import { getInviteInstructions } from '../invite-instructions/api';
 import { CloseIcon } from '../icons';
 import messages from '../messages';
 import { STATUS_MESSAGE_VARIANTS } from '../constants';
 import type { InviteOnlyStatusTypes } from './types';
 import { StatusMessage } from './StatusMessage';
 
-// The real per-partner "how to get an invite" message is a separate backend
-// task (see project_invite_only_message.md) — this shows placeholder copy
-// until that field exists, wired the same way the real one eventually will
-// be: one modal, opened from an info button next to the banner.
 export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
   const intl = useIntl();
   const [isModalOpen, openModal, closeModal] = useToggle(false);
+  const [inviteInstructions, setInviteInstructions] = useState<string | null>(null);
+
+  useEffect(() => {
+    getInviteInstructions(courseId)
+      .then(setInviteInstructions)
+      .catch((error) => logError('Failed to fetch invite instructions', error));
+  }, [courseId]);
 
   return (
     <>
@@ -58,9 +65,14 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
           </ModalDialog.Title>
         </ModalDialog.Header>
         <ModalDialog.Body>
-          {intl.formatMessage(messages.inviteInstructionsModalBody, {
-            supportEmail: getConfig().INFO_EMAIL,
-          })}
+          {hasVisibleHtmlContent(inviteInstructions) ? (
+            // eslint-disable-next-line react/no-danger
+            <div dangerouslySetInnerHTML={{ __html: inviteInstructions as string }} />
+          ) : (
+            intl.formatMessage(messages.inviteInstructionsModalBody, {
+              supportEmail: getConfig().INFO_EMAIL,
+            })
+          )}
         </ModalDialog.Body>
         {/*
           A plain custom button, not ModalDialog's own close button: that one
