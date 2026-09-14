@@ -41,7 +41,6 @@ export const useEnrollmentStatus = ({
     if (authenticatedUser && enrollment.isActive) {
       return (
         <EnrolledStatus
-          showCoursewareLink={showCoursewareLink}
           courseId={courseId}
           enrollmentMode={enrollment.mode}
         />

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { Card, Container } from '@openedx/paragon';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { containsTibetanScript } from '@src/utils';
+import { tibetanModifierClass } from '@src/utils';
 import type { CourseAboutDataPartial } from '../types';
 import { useEnrollmentActions, useEnrollmentStatus } from './hooks';
 
@@ -37,7 +37,7 @@ export const CourseIntro = ({ courseAboutData }: { courseAboutData: CourseAboutD
       <Card>
         <Card.Header
           title={(
-            <h1 className={classNames('my-0', { 'course-about-intro-title--tibetan': containsTibetanScript(courseName) })}>
+            <h1 className={classNames('my-0', tibetanModifierClass(courseName, 'course-about-intro-title--tibetan'))}>
               {courseName}
             </h1>
           )}

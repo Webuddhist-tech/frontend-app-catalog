@@ -60,3 +60,14 @@ const TIBETAN_SCRIPT_PATTERN = /[\u0F00-\u0FFF]/;
  * greeting and the course-about page's title both need it.
  */
 export const containsTibetanScript = (text: string): boolean => TIBETAN_SCRIPT_PATTERN.test(text);
+
+/**
+ * Returns `modifierClassName` when `text` is Tibetan script, otherwise
+ * `undefined` — the one piece every "give this heading more room when it's
+ * Tibetan" call site needs, so each doesn't hand-roll its own
+ * containsTibetanScript check + conditional class. Pass the result straight
+ * to `classNames()` alongside the element's base class(es).
+ */
+export const tibetanModifierClass = (text: string, modifierClassName: string): string | undefined => (
+  containsTibetanScript(text) ? modifierClassName : undefined
+);

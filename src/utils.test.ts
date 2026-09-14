@@ -1,7 +1,7 @@
 import { getConfig } from '@edx/frontend-platform';
 
 import {
-  resolveUrl, baseAppUrl, programsUrl, getCookie, containsTibetanScript,
+  resolveUrl, baseAppUrl, programsUrl, getCookie, containsTibetanScript, tibetanModifierClass,
 } from './utils';
 
 jest.mock('@edx/frontend-platform', () => ({
@@ -140,6 +140,16 @@ describe('utils', () => {
 
     it('returns true when only part of the text is Tibetan', () => {
       expect(containsTibetanScript('Welcome to Site, སངས་རྒྱས།')).toBe(true);
+    });
+  });
+
+  describe('tibetanModifierClass', () => {
+    it('returns the modifier class for Tibetan text', () => {
+      expect(tibetanModifierClass('སངས་རྒྱས་རྒྱལ།', 'my-title--tibetan')).toBe('my-title--tibetan');
+    });
+
+    it('returns undefined for Latin text', () => {
+      expect(tibetanModifierClass('Lionel', 'my-title--tibetan')).toBeUndefined();
     });
   });
 });

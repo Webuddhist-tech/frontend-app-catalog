@@ -44,12 +44,12 @@ describe('InviteOnlyStatus', () => {
     expect(getAuthenticatedUser).toHaveBeenCalled();
   });
 
-  it('fetches invite instructions for the course on mount', () => {
+  it('does not fetch invite instructions until the modal is opened', () => {
     render(<InviteOnlyStatus courseId={mockCourseId} />);
-    expect(getInviteInstructions).toHaveBeenCalledWith(mockCourseId);
+    expect(getInviteInstructions).not.toHaveBeenCalled();
   });
 
-  it('opens the "how to get an invite" modal on click and shows its title', async () => {
+  it('opens the "how to get an invite" modal on click, fetching instructions for the course', async () => {
     const user = userEvent.setup();
     render(<InviteOnlyStatus courseId={mockCourseId} />);
 
@@ -61,6 +61,23 @@ describe('InviteOnlyStatus', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
     expect(screen.getAllByText(messages.inviteInstructionsModalTitle.defaultMessage).length).toBeGreaterThan(0);
+    expect(getInviteInstructions).toHaveBeenCalledWith(mockCourseId);
+  });
+
+  it('does not re-fetch instructions on a second open', async () => {
+    const user = userEvent.setup();
+    render(<InviteOnlyStatus courseId={mockCourseId} />);
+    const infoButton = screen.getByRole('button', { name: messages.howToGetInviteBtn.defaultMessage });
+
+    await user.click(infoButton);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+
+    await user.click(infoButton);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+
+    expect(getInviteInstructions).toHaveBeenCalledTimes(1);
   });
 
   it('falls back to the default placeholder message when there is no partner message', async () => {

@@ -1,8 +1,8 @@
-import { getConfig } from '@edx/frontend-platform';
+import { baseAppUrl } from '@src/utils';
 
 /**
  * URL to fetch a course's invite-only instructions.
  */
 export const getInviteInstructionsUrl = (
   courseId: string,
-) => `${getConfig().LMS_BASE_URL}/api/courses/${encodeURIComponent(courseId)}/invite-instructions/`;
+) => baseAppUrl(`/api/courses/${encodeURIComponent(courseId)}/invite-instructions/`);

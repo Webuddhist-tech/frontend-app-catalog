@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import {
+  useEffect, useRef, useState,
+} from 'react';
 import { Button } from '@openedx/paragon';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -22,6 +24,12 @@ export const WishlistButton = ({ courseId }: WishlistButtonTypes) => {
   // (never by the initial status fetch below) — this is what tells the pop
   // animation apart from a course that simply loaded already-wishlisted.
   const [hasClicked, setHasClicked] = useState(false);
+  // A ref, not state: handleClick sets this synchronously, so the initial
+  // status fetch below can check it even if the fetch was already in flight
+  // when the click happened — a state flag would still show the pre-click
+  // value inside that already-scheduled .then(), since it's a closure over
+  // whatever hasClicked was when the effect ran, not whatever it is now.
+  const hasClickedRef = useRef(false);
 
   useEffect(() => {
     if (!authenticatedUser) {
@@ -29,7 +37,14 @@ export const WishlistButton = ({ courseId }: WishlistButtonTypes) => {
     }
 
     getWishlistStatus(courseId)
-      .then(setIsWishlisted)
+      .then((status) => {
+        // The user has since clicked (and optimistically set the real
+        // state themselves) — applying this slower, now-stale response
+        // would silently undo their click.
+        if (!hasClickedRef.current) {
+          setIsWishlisted(status);
+        }
+      })
       .catch((error) => logError('Failed to fetch wishlist status', error));
   }, [authenticatedUser, courseId]);
 
@@ -40,6 +55,7 @@ export const WishlistButton = ({ courseId }: WishlistButtonTypes) => {
   const handleClick = async () => {
     const nextIsWishlisted = !isWishlisted;
     // Optimistic: flips immediately, reverts silently if the request fails.
+    hasClickedRef.current = true;
     setHasClicked(true);
     setIsWishlisted(nextIsWishlisted);
     setIsPending(true);

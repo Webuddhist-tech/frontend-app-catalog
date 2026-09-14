@@ -69,7 +69,7 @@ export const BuyCourseEnrollmentButton = ({
           window.location.assign(purchaseLink);
         }}
       >
-        Buy Course
+        {intl.formatMessage(messages.buyCourseBtn)}
       </Button>
     );
   }

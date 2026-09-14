@@ -11,7 +11,6 @@ export interface EnrollmentButtonTypes {
 }
 
 export interface EnrolledStatusTypes {
-  showCoursewareLink: boolean;
   courseId: string;
   enrollmentMode: string | null;
 }

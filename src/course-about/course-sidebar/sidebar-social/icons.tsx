@@ -13,6 +13,8 @@
 
 import type { SVGProps } from 'react';
 
+import { lineIconDefaults } from '../../icons';
+
 export const XSocialIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width={24}
@@ -40,18 +42,7 @@ export const FacebookSocialIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 export const EmailSocialIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={1.8}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg {...lineIconDefaults} {...props}>
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <polyline points="22 6 12 13 2 6" />
   </svg>

@@ -1,6 +1,7 @@
 .course-media-wrapper {
-  // .course-media-image's own size (fixed height, width bounded to its own
-  // aspect ratio) lives in the brand override (_catalog.scss, under
+  // .course-media-image's own size (width fills the column, height follows
+  // that image's own real proportions — no fixed height or aspect ratio)
+  // lives in the brand override (_catalog.scss, under
   // .course-about-hero__media), alongside the rest of this page's visual
   // styling, not here.
 

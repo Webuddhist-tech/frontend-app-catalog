@@ -12,17 +12,7 @@
 
 import type { SVGProps } from 'react';
 
-const lineIconDefaults: SVGProps<SVGSVGElement> = {
-  width: 24,
-  height: 24,
-  viewBox: '0 0 24 24',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 1.8,
-  strokeLinecap: 'round',
-  strokeLinejoin: 'round',
-  xmlns: 'http://www.w3.org/2000/svg',
-};
+import { lineIconDefaults } from '../icons';
 
 // Feather's "heart", outline — not yet wishlisted.
 export const HeartLineIcon = (props: SVGProps<SVGSVGElement>) => (
@@ -93,18 +83,5 @@ export const ShoppingCartLineIcon = (props: SVGProps<SVGSVGElement>) => (
 export const PlayIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
     <polygon points="5 3 19 12 5 21 5 3" />
-  </svg>
-);
-
-// Feather's "x" — used for the invite-instructions modal's own close button
-// (see InviteOnlyStatus.tsx), which renders as a plain custom button rather
-// than Paragon's built-in ModalDialog close button: that one's size/colour
-// come bundled with its own internal styling, tied to its own internal
-// classes, which kept winning specificity ties against attempts to override
-// it from here. A plain button with a plain icon has nothing else to fight.
-export const CloseIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...lineIconDefaults} {...props}>
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );

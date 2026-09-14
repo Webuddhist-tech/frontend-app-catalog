@@ -7,10 +7,12 @@ describe('getSidebarDetails', () => {
   const mockIntl = {
     formatMessage: jest.fn((message) => message.defaultMessage),
     formatDate: jest.fn(),
+    formatNumber: jest.fn((value) => value.toLocaleString('en')),
   } as any;
 
   beforeEach(() => {
     mockIntl.formatDate.mockClear();
+    mockIntl.formatNumber.mockClear();
   });
 
   const createCourseData = (overrides = {}) => ({
@@ -176,14 +178,25 @@ describe('getSidebarDetails', () => {
     expect(durationDetail?.show).toBe(false);
   });
 
-  it('shows students enrolled count', () => {
-    const courseData = createCourseData({ enrolledStudentsCount: 42 });
+  it('shows students enrolled count, locale-formatted', () => {
+    const courseData = createCourseData({ enrolledStudentsCount: 12345 });
 
     const result = getSidebarDetails(mockIntl, courseData);
     const enrolledDetail = getDetailByKey(result, SIDEBAR_DETAIL_KEYS.STUDENTS_ENROLLED);
 
     expect(enrolledDetail?.show).toBe(true);
-    expect(enrolledDetail?.value).toBe(42);
+    expect(mockIntl.formatNumber).toHaveBeenCalledWith(12345);
+    expect(enrolledDetail?.value).toBe('12,345');
+  });
+
+  it('shows a students enrolled count of zero', () => {
+    const courseData = createCourseData({ enrolledStudentsCount: 0 });
+
+    const result = getSidebarDetails(mockIntl, courseData);
+    const enrolledDetail = getDetailByKey(result, SIDEBAR_DETAIL_KEYS.STUDENTS_ENROLLED);
+
+    expect(enrolledDetail?.show).toBe(true);
+    expect(enrolledDetail?.value).toBe('0');
   });
 
   it('returns correct icons for each detail type', () => {

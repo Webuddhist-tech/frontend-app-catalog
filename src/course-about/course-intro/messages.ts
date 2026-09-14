@@ -71,6 +71,11 @@ const messages = defineMessages({
     defaultMessage: 'Loading...',
     description: 'The text for the enrollment button while it is still checking whether this course can be purchased, before the user has clicked anything.',
   },
+  buyCourseBtn: {
+    id: 'category.course-about.course-intro.buy-course-btn',
+    defaultMessage: 'Buy Course',
+    description: 'The text for the button to purchase a course that has a purchase link.',
+  },
 });
 
 export default messages;

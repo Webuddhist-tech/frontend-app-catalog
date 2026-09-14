@@ -69,7 +69,11 @@ export const getSidebarDetails = (
     key: SIDEBAR_DETAIL_KEYS.STUDENTS_ENROLLED,
     icon: UsersLineIcon,
     label: intl.formatMessage(messages.studentsEnrolled),
-    value: courseAboutData.enrolledStudentsCount,
+    // Locale-grouped (e.g. "12,345"), matching the polish already applied to
+    // the date/effort values above rather than a plain, ungrouped number.
+    value: courseAboutData.enrolledStudentsCount != null
+      ? intl.formatNumber(courseAboutData.enrolledStudentsCount)
+      : null,
     show: courseAboutData.enrolledStudentsCount != null,
   },
 ];

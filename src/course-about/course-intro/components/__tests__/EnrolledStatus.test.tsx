@@ -5,7 +5,6 @@ import { EnrolledStatus } from '../EnrolledStatus';
 
 describe('EnrolledStatus', () => {
   const defaultProps = {
-    showCoursewareLink: false,
     courseId: 'test-course-123',
     enrollmentMode: 'audit',
   };
@@ -15,17 +14,8 @@ describe('EnrolledStatus', () => {
     expect(screen.getByText(messages.statusMessageEnrolled.defaultMessage)).toBeInTheDocument();
   });
 
-  it('always renders view course link regardless of showCoursewareLink', () => {
+  it('always renders the view course link', () => {
     render(<EnrolledStatus {...defaultProps} />);
-
-    const viewCourseBtnLink = screen.getByRole('link', {
-      name: messages.viewCourseBtn.defaultMessage,
-    });
-    expect(viewCourseBtnLink).toHaveAttribute('href', expect.stringContaining(defaultProps.courseId));
-  });
-
-  it('renders view course link when showCoursewareLink is true', () => {
-    render(<EnrolledStatus {...defaultProps} showCoursewareLink />);
 
     const viewCourseBtnLink = screen.getByRole('link', {
       name: messages.viewCourseBtn.defaultMessage,

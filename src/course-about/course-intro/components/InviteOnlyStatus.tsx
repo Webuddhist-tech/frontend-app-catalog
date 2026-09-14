@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   breakpoints, Stack, IconButton, OverlayTrigger, Tooltip, ModalDialog, useToggle, useMediaQuery,
 } from '@openedx/paragon';
-import { HelpOutline } from '@openedx/paragon/icons';
+import { Close, HelpOutline } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
@@ -10,7 +10,6 @@ import { logError } from '@edx/frontend-platform/logging';
 import CourseAboutWishlistButtonSlot from '@src/plugin-slots/CourseAboutWishlistButtonSlot';
 import { hasVisibleHtmlContent } from '../../utils';
 import { getInviteInstructions } from '../invite-instructions/api';
-import { CloseIcon } from '../icons';
 import messages from '../messages';
 import { STATUS_MESSAGE_VARIANTS } from '../constants';
 import type { InviteOnlyStatusTypes } from './types';
@@ -25,12 +24,21 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
   // own — side by side, the pill was squeezing the buttons well before
   // actually running out of room, on laptop-width screens, not just phones.
   const isCompact = useMediaQuery({ maxWidth: breakpoints.large.maxWidth });
+  // Most visitors never open this modal, so the fetch waits for the first
+  // click rather than firing for every course-about page view. The ref (not
+  // just checking inviteInstructions === null) is what stops a second open
+  // from re-fetching — null is also the legitimate "no partner message" result.
+  const hasFetchedInviteInstructions = useRef(false);
 
-  useEffect(() => {
-    getInviteInstructions(courseId)
-      .then(setInviteInstructions)
-      .catch((error) => logError('Failed to fetch invite instructions', error));
-  }, [courseId]);
+  const handleOpenModal = () => {
+    openModal();
+    if (!hasFetchedInviteInstructions.current) {
+      hasFetchedInviteInstructions.current = true;
+      getInviteInstructions(courseId)
+        .then(setInviteInstructions)
+        .catch((error) => logError('Failed to fetch invite instructions', error));
+    }
+  };
 
   return (
     <>
@@ -57,7 +65,7 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
             <IconButton
               src={HelpOutline}
               alt={intl.formatMessage(messages.howToGetInviteBtn)}
-              onClick={openModal}
+              onClick={handleOpenModal}
               className="course-about-invite-info-btn"
             />
           </OverlayTrigger>
@@ -105,7 +113,7 @@ export const InviteOnlyStatus = ({ courseId }: InviteOnlyStatusTypes) => {
           onClick={closeModal}
           aria-label={intl.formatMessage(messages.closeModalBtn)}
         >
-          <CloseIcon />
+          <Close />
         </button>
       </ModalDialog>
     </>
