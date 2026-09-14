@@ -1,6 +1,24 @@
-import { getGreetingName } from './utils';
+import { containsTibetanScript, getGreetingName } from './utils';
 
 describe('home-banner utils', () => {
+  describe('containsTibetanScript', () => {
+    it('returns true for a Tibetan name', () => {
+      expect(containsTibetanScript('སངས་རྒྱས་རྒྱལ།')).toBe(true);
+    });
+
+    it('returns false for a Latin name', () => {
+      expect(containsTibetanScript('Lionel')).toBe(false);
+    });
+
+    it('returns false for a CJK name', () => {
+      expect(containsTibetanScript('許俊賢')).toBe(false);
+    });
+
+    it('returns true when only part of the text is Tibetan', () => {
+      expect(containsTibetanScript('Welcome to Site, སངས་རྒྱས།')).toBe(true);
+    });
+  });
+
   describe('getGreetingName', () => {
     const greet = (name: string | null) => getGreetingName({ name, username: 'a_username' });
 

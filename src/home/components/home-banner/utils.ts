@@ -1,5 +1,19 @@
 import type { AuthenticatedUserTypes } from '@src/header/types';
 
+// Tibetan Unicode block (U+0F00-U+0FFF) — the same range the brand font
+// stack keys its Jomolhari fallback off of (see _overrides.scss).
+const TIBETAN_SCRIPT_PATTERN = /[\u0F00-\u0FFF]/;
+
+/**
+ * Returns whether the given text contains any Tibetan-script characters.
+ *
+ * Jomolhari (the font Tibetan text falls through to) stacks consonants and
+ * vowel signs well above/below a normal line, needing more line-height than
+ * Latin text does — this is how the heading knows to give a Tibetan name
+ * that extra room without also loosening the spacing under an English one.
+ */
+export const containsTibetanScript = (text: string): boolean => TIBETAN_SCRIPT_PATTERN.test(text);
+
 /**
  * Returns the name to greet a signed-in user by: the capitalised first word of
  * their full name, or their username if there's no name.

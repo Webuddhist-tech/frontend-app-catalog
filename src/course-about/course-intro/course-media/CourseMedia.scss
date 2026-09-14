@@ -1,9 +1,8 @@
 .course-media-wrapper {
-  .course-media-image {
-    height: var(--catalog-course-about-page-course-media-image-height, 15.75rem);
-    object-fit: cover;
-  }
-
+  // .course-media-image's own size (fixed height, width bounded to its own
+  // aspect ratio) lives in the brand override (_catalog.scss, under
+  // .course-about-hero__media), alongside the rest of this page's visual
+  // styling, not here.
 
   @media (--pgn-size-breakpoint-max-width-xl) {
     margin-bottom: var(--pgn-spacing-spacer-2-5);
