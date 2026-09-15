@@ -60,9 +60,8 @@ const CourseAboutPage = () => {
             <CourseAboutIntroSlot courseAboutData={courseAboutData} />
           </div>
           {/*
-            course-media-wrapper is load-bearing, not decorative: the brand
-            override (_catalog.scss, under .course-about-hero__media) styles
-            this page's course image off it.
+            course-media-wrapper is load-bearing, not decorative: CourseMedia.scss
+            hangs the image height and the centering of the video play button off it.
           */}
           <div className="course-about-hero__media course-media-wrapper">
             <CourseAboutCourseMediaSlot courseAboutData={courseAboutData} />
