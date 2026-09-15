@@ -1,14 +1,12 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { PluginSlot } from '@openedx/frontend-plugin-framework';
 
-import { DEFAULT_VIDEO_MODAL_HEIGHT, DEFAULT_VIDEO_MODAL_WIDTH, IFRAME_FEATURE_POLICY } from '@src/constants';
+import { IFRAME_FEATURE_POLICY } from '@src/constants';
 import messages from '@src/generic/video-modal/messages';
 import type { CourseAboutIntroVideoModalContentSlotProps } from './types';
 
 export const CourseAboutIntroVideoModalContentSlot = ({
   videoId,
-  width = DEFAULT_VIDEO_MODAL_WIDTH,
-  height = DEFAULT_VIDEO_MODAL_HEIGHT,
 }: CourseAboutIntroVideoModalContentSlotProps) => {
   const intl = useIntl();
 
@@ -16,12 +14,11 @@ export const CourseAboutIntroVideoModalContentSlot = ({
     <PluginSlot
       id="org.openedx.frontend.catalog.course_about_page.intro_video_modal_content"
       slotOptions={{ mergeProps: true }}
-      pluginProps={{ videoId, width, height }}
+      pluginProps={{ videoId }}
     >
       <iframe
         title={intl.formatMessage(messages.videoIframeTitle)}
-        width={width}
-        height={height}
+        className="video-modal-iframe"
         src={`//www.youtube.com/embed/${videoId}?showinfo=0`}
         frameBorder="0"
         allowFullScreen

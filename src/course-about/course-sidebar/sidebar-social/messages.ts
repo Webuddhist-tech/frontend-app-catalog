@@ -6,11 +6,6 @@ const messages = defineMessages({
     defaultMessage: 'Social sharing options',
     description: 'Aria label for social sharing options.',
   },
-  socialSharingTooltip: {
-    id: 'category.course-about.sidebar-social.social-sharing-tooltip',
-    defaultMessage: 'Share with friends and family!',
-    description: 'Tooltip for social sharing options.',
-  },
   socialSharingTwitter: {
     id: 'category.course-about.sidebar-social.social-sharing-twitter',
     defaultMessage: 'Tweet that you\'ve enrolled in this course',

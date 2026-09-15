@@ -65,10 +65,12 @@ export interface PrerequisiteCourse {
   shortDescription?: string;
 }
 
-export interface OCWLink {
-  title: string;
-  url: string;
-  description?: string;
+export interface Instructor {
+  name: string | null;
+  title: string | null;
+  organization: string | null;
+  image: string | null;
+  bio: string | null;
 }
 
 export interface CourseAboutData {
@@ -126,9 +128,12 @@ export interface CourseAboutData {
   displayNumberWithDefault: string;
   displayOrgWithDefault: string;
   overview: string;
-  ocwLinks: OCWLink[];
-  prerequisites: string[];
-  requirements: string;
+  description: string | null;
+  learningInfo: string[];
+  instructorInfo: Instructor[];
+  duration: string | null;
+  enrolledStudentsCount: number;
+  requirements: string | null;
 }
 
 export type CourseAboutDataPartial = Omit<Pick<CourseAboutData,
@@ -155,4 +160,4 @@ export type CourseMediaPartial = {
   courseVideo?: CourseVideo;
 };
 
-export type EnrollmentPartial = Pick<Enrollment, 'isActive'>;
+export type EnrollmentPartial = Pick<Enrollment, 'isActive' | 'mode'>;

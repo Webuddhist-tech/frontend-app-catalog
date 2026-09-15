@@ -2,7 +2,10 @@ import { Button } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import CourseAboutEnrollmentButtonSlot from '@src/plugin-slots/CourseAboutEnrollmentButtonSlot';
-import { StatusMessage, EnrolledStatus } from '../components';
+import CourseAboutWishlistButtonSlot from '@src/plugin-slots/CourseAboutWishlistButtonSlot';
+import {
+  StatusMessage, EnrolledStatus, InviteOnlyStatus,
+} from '../components';
 import { getLearningHomePageUrl } from '../utils';
 import messages from '../messages';
 import { STATUS_MESSAGE_VARIANTS } from '../constants';
@@ -36,7 +39,12 @@ export const useEnrollmentStatus = ({
     }
 
     if (authenticatedUser && enrollment.isActive) {
-      return <EnrolledStatus showCoursewareLink={showCoursewareLink} courseId={courseId} />;
+      return (
+        <EnrolledStatus
+          courseId={courseId}
+          enrollmentMode={enrollment.mode}
+        />
+      );
     }
 
     if (isCourseFull) {
@@ -44,7 +52,7 @@ export const useEnrollmentStatus = ({
     }
 
     if (invitationOnly && !canEnroll) {
-      return <StatusMessage variant={STATUS_MESSAGE_VARIANTS.INFO} messageKey="statusMessageEnrollmentInvitationOnly" />;
+      return <InviteOnlyStatus courseId={courseId} />;
     }
 
     if (!isShibCourse && !canEnroll) {
@@ -53,20 +61,26 @@ export const useEnrollmentStatus = ({
 
     if (allowAnonymous && showCoursewareLink) {
       return (
-        <Button as="a" href={getLearningHomePageUrl(courseId)}>
+        <Button as="a" variant="secondary" href={getLearningHomePageUrl(courseId)}>
           {intl.formatMessage(messages.viewCourseBtn)}
         </Button>
       );
     }
 
+    // Enroll + Wishlist as flat siblings, not wrapped in their own Stack: the
+    // hero's own .pgn__card-footer CSS already handles the gap and the
+    // wrap/stack-on-mobile behaviour for however many direct children it has.
     return (
-      <CourseAboutEnrollmentButtonSlot
-        singlePaidMode={singlePaidMode}
-        ecommerceCheckout={ecommerceCheckout}
-        isEnrollmentPending={isEnrollmentPending}
-        onEnroll={handleChangeEnrollment}
-        onEcommerceCheckout={handleEcommerceCheckout}
-      />
+      <>
+        <CourseAboutEnrollmentButtonSlot
+          singlePaidMode={singlePaidMode}
+          ecommerceCheckout={ecommerceCheckout}
+          isEnrollmentPending={isEnrollmentPending}
+          onEnroll={handleChangeEnrollment}
+          onEcommerceCheckout={handleEcommerceCheckout}
+        />
+        <CourseAboutWishlistButtonSlot courseId={courseId} />
+      </>
     );
   };
 

@@ -1,13 +1,10 @@
 import { useMemo } from 'react';
-import {
-  Tooltip, OverlayTrigger, Card,
-} from '@openedx/paragon';
+import { Card } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import type { CourseAboutData } from '@src/course-about/types';
 import CourseAboutSidebarSocialSlot from '@src/plugin-slots/CourseAboutSidebarSocialSlot';
 import { getSocialLinks } from './utils';
-import messages from './messages';
 
 const SidebarSocial = ({ courseAboutData }: { courseAboutData: CourseAboutData }) => {
   const intl = useIntl();
@@ -20,20 +17,13 @@ const SidebarSocial = ({ courseAboutData }: { courseAboutData: CourseAboutData }
     [courseAboutData, intl],
   );
 
+  // Each button carries its own tooltip now (see SocialLinks), naming the
+  // platform it shares to, rather than one generic tooltip for the whole row.
   return (
-    <OverlayTrigger
-      placement="top"
-      overlay={(
-        <Tooltip id="tooltip-top">
-          {intl.formatMessage(messages.socialSharingTooltip)}
-        </Tooltip>
-      )}
-    >
-      <header>
-        <CourseAboutSidebarSocialSlot socialLinks={socialLinks} />
-        <Card.Divider />
-      </header>
-    </OverlayTrigger>
+    <header>
+      <CourseAboutSidebarSocialSlot socialLinks={socialLinks} />
+      <Card.Divider />
+    </header>
   );
 };
 

@@ -11,11 +11,15 @@ export interface EnrollmentButtonTypes {
 }
 
 export interface EnrolledStatusTypes {
-  showCoursewareLink: boolean;
   courseId: string;
+  enrollmentMode: string | null;
 }
 
 export interface StatusMessageTypes {
   variant: StatusMessageVariant;
   messageKey: string;
+}
+
+export interface InviteOnlyStatusTypes {
+  courseId: string;
 }

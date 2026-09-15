@@ -13,7 +13,7 @@ const CourseAboutCourseImageSlot = ({ imgSrc, altText }: CourseAboutCourseImageS
     pluginProps={{ imgSrc, altText }}
   >
     <Image
-      className="course-media-image shadow w-100"
+      className="course-media-image shadow"
       src={imgSrc}
       rounded
       alt={altText}

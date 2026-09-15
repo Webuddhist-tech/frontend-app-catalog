@@ -47,17 +47,17 @@ describe('SidebarSocial', () => {
     });
   });
 
-  it('should display tooltip on hover', async () => {
+  it('should display each share button\'s own tooltip on hover', async () => {
     render(<SidebarSocial {...defaultProps} />);
 
-    const container = screen.getByLabelText(messages.socialSharingOptionsAriaLabel.defaultMessage);
-    expect(container).toBeInTheDocument();
+    const twitterLink = (await screen.findByText(messages.socialSharingTwitter.defaultMessage)).closest('a');
+    expect(twitterLink).toBeInTheDocument();
 
-    await userEvent.hover(
-      screen.getByLabelText(messages.socialSharingOptionsAriaLabel.defaultMessage),
-    );
+    await userEvent.hover(twitterLink as HTMLElement);
 
-    expect(screen.getByText(messages.socialSharingTooltip.defaultMessage)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toHaveTextContent(messages.socialSharingTwitter.defaultMessage);
+    });
   });
 
   it('should render Twitter sharing link', async () => {

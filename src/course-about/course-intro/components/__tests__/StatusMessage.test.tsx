@@ -15,7 +15,8 @@ describe('StatusMessage', () => {
     renderStatusMessage(STATUS_MESSAGE_VARIANTS.SUCCESS, 'statusMessageEnrolled');
 
     const statusMessage = screen.getByRole('status');
-    expect(statusMessage).toHaveClass(`text-${STATUS_MESSAGE_VARIANTS.SUCCESS}-500`);
+    expect(statusMessage).toHaveClass('course-about-status-banner');
+    expect(statusMessage).toHaveClass(`course-about-status-banner--${STATUS_MESSAGE_VARIANTS.SUCCESS}`);
     expect(within(statusMessage).getByText(messages.statusMessageEnrolled.defaultMessage)).toBeInTheDocument();
   });
 
@@ -23,7 +24,8 @@ describe('StatusMessage', () => {
     renderStatusMessage(STATUS_MESSAGE_VARIANTS.INFO, 'statusMessageFull');
 
     const statusMessage = screen.getByRole('status');
-    expect(statusMessage).toHaveClass(`text-${STATUS_MESSAGE_VARIANTS.INFO}-500`);
+    expect(statusMessage).toHaveClass('course-about-status-banner');
+    expect(statusMessage).toHaveClass(`course-about-status-banner--${STATUS_MESSAGE_VARIANTS.INFO}`);
     expect(within(statusMessage).getByText(messages.statusMessageFull.defaultMessage)).toBeInTheDocument();
   });
 
@@ -31,7 +33,8 @@ describe('StatusMessage', () => {
     renderStatusMessage(STATUS_MESSAGE_VARIANTS.DANGER, 'statusMessageEnrolled');
 
     const statusMessage = screen.getByRole('status');
-    expect(statusMessage).toHaveClass(`text-${STATUS_MESSAGE_VARIANTS.DANGER}-500`);
+    expect(statusMessage).toHaveClass('course-about-status-banner');
+    expect(statusMessage).toHaveClass(`course-about-status-banner--${STATUS_MESSAGE_VARIANTS.DANGER}`);
     expect(within(statusMessage).getByText(messages.statusMessageEnrolled.defaultMessage)).toBeInTheDocument();
   });
 });

@@ -58,6 +58,14 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(),
 }));
 
+// WishlistButton fetches its own status independently of anything else under
+// test here, once an authenticated user is mocked in for the course-about test.
+jest.mock('./course-about/course-intro/wishlist/api', () => ({
+  getWishlistStatus: jest.fn(() => Promise.resolve(false)),
+  addToWishlist: jest.fn(),
+  removeFromWishlist: jest.fn(),
+}));
+
 describe('App', () => {
   beforeEach(() => {
     document.body.innerHTML = '';

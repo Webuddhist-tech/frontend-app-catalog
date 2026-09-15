@@ -6,7 +6,6 @@ import type { EnrollmentButtonTypes } from './types';
 
 export const EnrollmentButton = ({
   onEnroll,
-  singlePaidMode,
   ecommerceCheckout,
   isEnrollmentPending,
   onEcommerceCheckout,
@@ -15,7 +14,7 @@ export const EnrollmentButton = ({
 
   return (
     <StatefulButton
-      variant={Object.entries(singlePaidMode).length > 0 ? 'outline-primary' : 'primary'}
+      variant="primary"
       onClick={ecommerceCheckout ? onEcommerceCheckout : onEnroll}
       state={isEnrollmentPending ? 'pending' : 'default'}
       labels={{

@@ -58,11 +58,15 @@ describe('SidebarDetailsItem', () => {
     expect(valueElement).toHaveTextContent(defaultProps.value);
   });
 
-  it('renders Card.Divider after content', () => {
+  it('renders no trailing divider element of its own', () => {
+    // The divider between rows is drawn in CSS (see _catalog.scss) rather
+    // than a Card.Divider baked into each item: that would leave a trailing
+    // line with nothing below it whenever an item happens to be the last one
+    // actually rendered.
     const { container } = render(<SidebarDetailsItem {...defaultProps} />);
 
     const divider = container.querySelector('.pgn__card-divider');
-    expect(divider).toBeInTheDocument();
+    expect(divider).not.toBeInTheDocument();
   });
 
   it('handles empty string value', () => {

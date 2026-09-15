@@ -56,18 +56,15 @@ describe('EnrollmentButton', () => {
     expect(enrollNowBtn).toHaveClass('btn-primary');
   });
 
-  it('renders button with correct attributes and classes with singlePaidMode', () => {
+  it('always renders solid primary, regardless of singlePaidMode', () => {
     render(<EnrollmentButton {...defaultProps} singlePaidMode={{ mode: 'paid' }} />);
 
     const enrollNowBtn = screen.getByRole('button', {
       name: messages.enrollNowBtn.defaultMessage,
     });
 
-    expect(enrollNowBtn).toHaveAttribute('aria-disabled', 'false');
-    expect(enrollNowBtn).toHaveAttribute('aria-live', 'assertive');
-    expect(enrollNowBtn).toHaveClass('pgn__stateful-btn');
-    expect(enrollNowBtn).toHaveClass('btn');
-    expect(enrollNowBtn).toHaveClass('btn-outline-primary');
+    expect(enrollNowBtn).toHaveClass('btn-primary');
+    expect(enrollNowBtn).not.toHaveClass('btn-outline-primary');
   });
 
   it('handles keyboard interaction for accessibility', async () => {

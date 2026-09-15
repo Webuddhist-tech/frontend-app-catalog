@@ -39,6 +39,15 @@ jest.mock('@openedx/paragon', () => ({
   useMediaQuery: jest.fn(),
 }));
 
+// WishlistButton (rendered for any authenticated visitor to an open or
+// invite-only course, including the global-staff user below) fetches its own
+// status independently of anything else under test in this integration suite.
+jest.mock('./course-intro/wishlist/api', () => ({
+  getWishlistStatus: jest.fn(() => Promise.resolve(false)),
+  addToWishlist: jest.fn(),
+  removeFromWishlist: jest.fn(),
+}));
+
 const mockUseMediaQuery = useMediaQuery as jest.Mock;
 const mockGetConfig = getConfig as jest.Mock;
 const mockFetchCourseAboutData = fetchCourseAboutData as jest.Mock;
@@ -198,9 +207,7 @@ describe('CourseAboutPage Integration Tests', () => {
       it('should render course sidebar with course details', async () => {
         const courseData = {
           ...mockCourseAboutResponse,
-          displayNumberWithDefault: 'CS101',
           effort: '6-8 hours per week',
-          requirements: 'Basic programming knowledge',
           coursePrice: '$99',
         };
 
@@ -210,9 +217,7 @@ describe('CourseAboutPage Integration Tests', () => {
 
         await waitFor(() => {
           const sidebar = screen.getByRole('complementary');
-          expect(within(sidebar).getByText(courseData.displayNumberWithDefault)).toBeInTheDocument();
           expect(within(sidebar).getByText(courseData.effort)).toBeInTheDocument();
-          expect(within(sidebar).getByText(courseData.requirements)).toBeInTheDocument();
           expect(within(sidebar).getByText(courseData.coursePrice)).toBeInTheDocument();
         });
       });
@@ -264,24 +269,6 @@ describe('CourseAboutPage Integration Tests', () => {
           const sidebar = screen.getByRole('complementary');
           expect(
             within(sidebar).queryByText(sidebarDetailsMessages.estimatedEffort.defaultMessage),
-          ).not.toBeInTheDocument();
-        });
-      });
-
-      it('should not display requirements when not provided', async () => {
-        const courseData = {
-          ...mockCourseAboutResponse,
-          requirements: null,
-        };
-
-        mockFetchCourseAboutData.mockReturnValue(courseData);
-
-        render(<CourseAboutPage />);
-
-        await waitFor(() => {
-          const sidebar = screen.getByRole('complementary');
-          expect(
-            within(sidebar).queryByText(sidebarDetailsMessages.requirements.defaultMessage),
           ).not.toBeInTheDocument();
         });
       });
@@ -376,61 +363,36 @@ describe('CourseAboutPage Integration Tests', () => {
       mockFetchCourseAboutData.mockReturnValue(mockCourseAboutResponse);
     });
 
-    it('should render mobile layout for small screens', async () => {
-      mockUseMediaQuery.mockReturnValue(true);
+    // The page no longer branches on viewport width — one tree is rendered at
+    // every size and the stylesheet's grid does the reordering. These cases
+    // assert that width-invariance by driving the media query both ways.
+    it.each([
+      ['small screens', true],
+      ['large screens', false],
+    ])('should render the same layout on %s', async (_label, isSmallScreen) => {
+      mockUseMediaQuery.mockReturnValue(isSmallScreen);
 
       render(<CourseAboutPage />);
 
       await waitFor(() => {
         expect(screen.getByText(mockCourseAboutResponse.name)).toBeInTheDocument();
         expect(screen.getByText(mockCourseAboutResponse.displayOrgWithDefault)).toBeInTheDocument();
-
-        const sidebar = screen.getByRole('complementary');
-        expect(sidebar).toBeInTheDocument();
-
+        expect(screen.getByRole('complementary')).toBeInTheDocument();
         expect(screen.getByAltText(mockCourseAboutResponse.name)).toBeInTheDocument();
       });
     });
 
-    it('should render desktop layout for large screens', async () => {
-      mockUseMediaQuery.mockReturnValue(false);
-
+    // Guards the bug the old width-branching invited: the content list used to
+    // be duplicated across both branches, so a section could be rendered twice.
+    it('should render the course media exactly once', async () => {
       render(<CourseAboutPage />);
 
       await waitFor(() => {
-        expect(screen.getByText(mockCourseAboutResponse.name)).toBeInTheDocument();
-        expect(screen.getByText(mockCourseAboutResponse.displayOrgWithDefault)).toBeInTheDocument();
-
-        const sidebar = screen.getByRole('complementary');
-        expect(sidebar).toBeInTheDocument();
-
         expect(screen.getByAltText(mockCourseAboutResponse.name)).toBeInTheDocument();
       });
-    });
 
-    it('should apply correct CSS classes for mobile layout', async () => {
-      mockUseMediaQuery.mockReturnValue(true);
-
-      render(<CourseAboutPage />);
-
-      await waitFor(() => {
-        const mediaWrapper = document.querySelector('.course-media-wrapper.text-center');
-        expect(mediaWrapper).toBeInTheDocument();
-      });
-    });
-
-    it('should apply correct CSS classes for desktop layout', async () => {
-      mockUseMediaQuery.mockReturnValue(false);
-
-      render(<CourseAboutPage />);
-
-      await waitFor(() => {
-        const mediaWrapper = document.querySelector('.course-media-wrapper.text-center');
-        expect(mediaWrapper).not.toBeInTheDocument();
-
-        const mediaWrapperWithoutCenter = document.querySelector('.course-media-wrapper:not(.text-center)');
-        expect(mediaWrapperWithoutCenter).toBeInTheDocument();
-      });
+      expect(document.querySelectorAll('.course-media-wrapper')).toHaveLength(1);
+      expect(screen.getAllByRole('complementary')).toHaveLength(1);
     });
   });
 

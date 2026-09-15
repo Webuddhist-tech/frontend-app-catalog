@@ -21,6 +21,15 @@ jest.mock('@src/course-about/data/hooks', () => ({
   useEnrollment: jest.fn(),
 }));
 
+// WishlistButton (rendered alongside Enroll now for an authenticated,
+// eligible visitor) fetches its own status independently of anything else
+// under test here.
+jest.mock('./wishlist/api', () => ({
+  getWishlistStatus: jest.fn(() => Promise.resolve(false)),
+  addToWishlist: jest.fn(),
+  removeFromWishlist: jest.fn(),
+}));
+
 describe('CourseIntro', () => {
   const mockEnrollAndRedirect = jest.fn();
 
@@ -35,7 +44,23 @@ describe('CourseIntro', () => {
 
     expect(screen.getByText(mockCourseAboutResponse.name)).toBeInTheDocument();
     expect(screen.getByText(mockCourseAboutResponse.org)).toBeInTheDocument();
-    expect(screen.getByText(mockCourseAboutResponse.shortDescription)).toBeInTheDocument();
+  });
+
+  it('does not give an English title the Tibetan line-height modifier', () => {
+    render(<CourseIntro courseAboutData={mockCourseAboutResponse} />);
+
+    expect(screen.getByText(mockCourseAboutResponse.name)).not.toHaveClass('course-about-intro-title--tibetan');
+  });
+
+  it('gives a Tibetan title the Tibetan line-height modifier', () => {
+    const tibetanTitleCourseData = {
+      ...mockCourseAboutResponse,
+      name: 'སངས་རྒྱས་རྒྱལ་མཚན།',
+    };
+
+    render(<CourseIntro courseAboutData={tibetanTitleCourseData} />);
+
+    expect(screen.getByText(tibetanTitleCourseData.name)).toHaveClass('course-about-intro-title--tibetan');
   });
 
   it('renders enrollment button for eligible users', async () => {
@@ -65,7 +90,7 @@ describe('CourseIntro', () => {
     (getAuthenticatedUser as jest.Mock).mockReturnValue({ username: 'testuser' });
     const enrolledCourseData = {
       ...mockCourseAboutResponse,
-      enrollment: { isActive: true },
+      enrollment: { isActive: true, mode: 'audit' },
     };
 
     render(<CourseIntro courseAboutData={enrolledCourseData} />);

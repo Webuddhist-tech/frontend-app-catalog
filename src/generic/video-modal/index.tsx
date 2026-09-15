@@ -18,7 +18,7 @@ export const VideoModal = ({
       onClose={close}
       hasCloseButton={false}
       isOverflowVisible={false}
-      className="bg-transparent shadow-none"
+      className="bg-transparent shadow-none video-modal"
     >
       {children}
     </ModalDialog>

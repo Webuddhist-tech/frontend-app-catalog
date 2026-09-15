@@ -44,3 +44,30 @@ export const formatDate = (dateString: string, intl: IntlShape): string => {
   const date = new Date(dateString);
   return intl.formatDate(date, DATE_FORMAT_OPTIONS);
 };
+
+// Tibetan Unicode block (U+0F00-U+0FFF) — the same range the brand font
+// stack keys its Jomolhari fallback off of (see _overrides.scss).
+const TIBETAN_SCRIPT_PATTERN = /[\u0F00-\u0FFF]/;
+
+/**
+ * Returns whether the given text contains any Tibetan-script characters.
+ *
+ * Jomolhari (the font Tibetan text falls through to) stacks consonants and
+ * vowel signs well above/below a normal line, needing more line-height than
+ * Latin text does — this is how a heading knows to give Tibetan text that
+ * extra room without also loosening the spacing around Latin text. Shared
+ * rather than living next to one heading's own styling: the homepage
+ * greeting and the course-about page's title both need it.
+ */
+export const containsTibetanScript = (text: string): boolean => TIBETAN_SCRIPT_PATTERN.test(text);
+
+/**
+ * Returns `modifierClassName` when `text` is Tibetan script, otherwise
+ * `undefined` — the one piece every "give this heading more room when it's
+ * Tibetan" call site needs, so each doesn't hand-roll its own
+ * containsTibetanScript check + conditional class. Pass the result straight
+ * to `classNames()` alongside the element's base class(es).
+ */
+export const tibetanModifierClass = (text: string, modifierClassName: string): string | undefined => (
+  containsTibetanScript(text) ? modifierClassName : undefined
+);
