@@ -12,6 +12,7 @@ import { useMenuItems } from './useMenuItems';
 
 const DEFAULT_CONFIG = {
   LMS_BASE_URL: process.env.LMS_BASE_URL,
+  EXTENSION_BASE_URL: process.env.EXTENSION_BASE_URL,
   SUPPORT_URL: process.env.SUPPORT_URL,
   ENABLE_PROGRAMS: process.env.ENABLE_PROGRAMS,
   ENABLE_COURSE_DISCOVERY: process.env.ENABLE_COURSE_DISCOVERY,
@@ -91,22 +92,22 @@ describe('useMenuItems', () => {
     });
     expect(result.current.mainMenu[3]).toEqual({
       type: 'item',
-      href: `${getConfig().LMS_BASE_URL}/wishlist/`,
+      href: `${getConfig().EXTENSION_BASE_URL}/wishlist`,
       content: messages.wishlist.defaultMessage,
       iconName: 'wishlist',
     });
   });
 
-  it('should derive the wishlist link from LMS_BASE_URL rather than hardcoding it', () => {
+  it('should derive the wishlist link from EXTENSION_BASE_URL', () => {
     (getConfig as jest.Mock).mockReturnValue({
       ...DEFAULT_CONFIG,
-      LMS_BASE_URL: 'https://example.test',
+      EXTENSION_BASE_URL: 'https://apps.example.test',
     });
 
     const { result } = renderWithAppContext({ username: 'testuser' });
 
     expect(result.current.mainMenu).toContainEqual(
-      expect.objectContaining({ href: 'https://example.test/wishlist/' }),
+      expect.objectContaining({ href: 'https://apps.example.test/wishlist' }),
     );
   });
 
