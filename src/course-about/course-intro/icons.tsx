@@ -23,9 +23,9 @@ export const HeartLineIcon = (props: SVGProps<SVGSVGElement>) => (
 
 // Same path, filled solid instead of stroked — already wishlisted. Red
 // rather than currentColor: it should read as "wishlisted" on sight,
-// regardless of whatever button colour surrounds it. Matches the brand's own
-// error/danger red (see $error-text in _variables.scss) rather than an
-// unrelated one-off red.
+// regardless of whatever button colour surrounds it. A vivid red rather than
+// the brand's own darker error/danger red ($error-text in _variables.scss),
+// which reads more brown than red at this size.
 //
 // Keeps the same stroke as HeartLineIcon (just in its own fill colour rather
 // than none) instead of dropping it: an SVG stroke is centred on the path,
@@ -40,8 +40,8 @@ export const HeartLineIcon = (props: SVGProps<SVGSVGElement>) => (
 export const HeartFilledIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     {...lineIconDefaults}
-    fill="#8B0000"
-    stroke="#8B0000"
+    fill="#DC2626"
+    stroke="#DC2626"
     {...props}
   >
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z" />
@@ -58,8 +58,8 @@ export const HeartFilledIcon = (props: SVGProps<SVGSVGElement>) => (
 export const HeartFilledPopIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     {...lineIconDefaults}
-    fill="#8B0000"
-    stroke="#8B0000"
+    fill="#DC2626"
+    stroke="#DC2626"
     className="course-about-heart-pop"
     {...props}
   >
