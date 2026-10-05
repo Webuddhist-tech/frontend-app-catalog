@@ -51,6 +51,24 @@ describe('Course List Search Data Layer', () => {
       expect((formData as FormData).get('enable_course_sorting_by_start_date')).toBe('true');
     });
 
+    it('should preserve raw organization identifiers in the display-name map', async () => {
+      const mockPost = jest.fn().mockResolvedValue({
+        data: {
+          ...mockCourseListSearchResponse,
+          organization_display_names: {
+            PalpungHongKong: 'Palpung HongKong',
+          },
+        },
+      });
+      mockGetAuthenticatedHttpClient.mockReturnValue({ post: mockPost });
+
+      const result = await fetchCourseListSearch({});
+
+      expect(result.organizationDisplayNames).toEqual({
+        PalpungHongKong: 'Palpung HongKong',
+      });
+    });
+
     it('should handle API errors', async () => {
       const error = new Error('API Error');
       const mockPost = jest.fn().mockRejectedValue(error);

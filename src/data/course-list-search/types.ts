@@ -1,6 +1,11 @@
 export interface CourseListSearchResponse {
   took: number;
   total: number;
+  /**
+   * Learner-facing names keyed by the raw organization identifiers used by
+   * the `org` aggregation and filter request.
+   */
+  organizationDisplayNames?: Record<string, string>;
   results: {
     id: string;
     index: string;
@@ -12,6 +17,7 @@ export interface CourseListSearchResponse {
       start: string;
       imageUrl: string;
       org: string;
+      organizationDisplayName?: string;
       orgImageUrl?: string;
       partnerLogoUrl?: string;
       advertisedStart?: string;

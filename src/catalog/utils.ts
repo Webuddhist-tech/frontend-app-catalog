@@ -35,7 +35,11 @@ const formatChoiceName = (term: string): string => term
 /**
  * Transforms aggregations into filter choices for DataTable.
  */
-export const transformAggregationsToFilterChoices = (aggregations: Aggregations | undefined, intl: IntlShape) => {
+export const transformAggregationsToFilterChoices = (
+  aggregations: Aggregations | undefined,
+  intl: IntlShape,
+  organizationDisplayNames: Record<string, string> = {},
+) => {
   if (!aggregations) { return []; }
 
   const headerMap: Record<string, string> = {
@@ -47,9 +51,11 @@ export const transformAggregationsToFilterChoices = (aggregations: Aggregations 
   return Object.entries(aggregations).map(([key, aggValue]) => {
     const terms = aggValue.terms || {};
     const filterChoices = Object.entries(terms).map(([termKey, count]) => {
-      const displayName = key === 'language'
-        ? getLanguageName(termKey, intl.locale)
-        : formatChoiceName(termKey);
+      const displayName = key === 'org'
+        ? organizationDisplayNames[termKey] || formatChoiceName(termKey)
+        : key === 'language'
+          ? getLanguageName(termKey, intl.locale)
+          : formatChoiceName(termKey);
 
       return {
         name: displayName,
