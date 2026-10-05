@@ -10,6 +10,7 @@ const CourseCatalogDataTableCourseCardSlot = ({
     isLoading,
     courseId: courseData?.id,
     courseOrg: courseData?.data.org,
+    organizationDisplayName: courseData?.data.organizationDisplayName,
     courseName: courseData?.data.content.displayName,
     courseImageUrl: courseData?.data.imageUrl,
     // The search index carries a logo but no institution name, so the card

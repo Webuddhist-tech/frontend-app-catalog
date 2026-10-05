@@ -127,6 +127,7 @@ export interface CourseAboutData {
   aboutSidebarHtml: string | null;
   displayNumberWithDefault: string;
   displayOrgWithDefault: string;
+  organizationDisplayName?: string;
   overview: string;
   description: string | null;
   learningInfo: string[];
@@ -140,6 +141,7 @@ export type CourseAboutDataPartial = Omit<Pick<CourseAboutData,
 | 'id'
 | 'name'
 | 'displayOrgWithDefault'
+| 'organizationDisplayName'
 | 'shortDescription'
 | 'enrollment'
 | 'isCourseFull'

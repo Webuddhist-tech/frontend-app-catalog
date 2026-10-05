@@ -69,8 +69,12 @@ const CatalogPage = () => {
   }, [isFetching, filterState.isFilterChangeInProgress, resetFilterProgress]);
 
   const tableColumns = useMemo(
-    () => transformAggregationsToFilterChoices(displayData?.aggs, intl),
-    [displayData?.aggs, intl],
+    () => transformAggregationsToFilterChoices(
+      displayData?.aggs,
+      intl,
+      displayData?.organizationDisplayNames,
+    ),
+    [displayData?.aggs, displayData?.organizationDisplayNames, intl],
   );
 
   if (isLoading || (!hasInitializedFromUrl && urlSearchQuery)) {

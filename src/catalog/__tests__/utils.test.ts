@@ -100,6 +100,28 @@ describe('utils', () => {
       });
     });
 
+    it('should use the API organization display name while preserving the raw filter value', () => {
+      const aggs = {
+        org: {
+          terms: { Khyentse_Foundation: 8 },
+          total: 8,
+          other: 0,
+        },
+      };
+
+      const result = transformAggregationsToFilterChoices(aggs, intl, {
+        Khyentse_Foundation: 'Khyentse Foundation',
+      });
+
+      expect(result[0].filterChoices).toEqual([
+        {
+          name: 'Khyentse Foundation',
+          number: 8,
+          value: 'Khyentse_Foundation',
+        },
+      ]);
+    });
+
     it('should use locale for language display names', () => {
       const aggs = {
         language: {

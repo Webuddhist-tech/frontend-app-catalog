@@ -36,10 +36,17 @@ export const fetchCourseListSearch = async (params): Promise<CourseListSearchRes
     .post(getCourseListSearchUrl(), formData);
 
   const rawAggs = data.aggs;
+  const rawOrganizationDisplayNames = data.organization_display_names;
   const camelized = camelCaseObject(data);
 
   if (rawAggs) {
     camelized.aggs = rawAggs;
+  }
+
+  // These keys are raw organization identifiers and must match aggs.org.terms.
+  // Preserve them because the generic camelizer can change identifier keys.
+  if (rawOrganizationDisplayNames) {
+    camelized.organizationDisplayNames = rawOrganizationDisplayNames;
   }
 
   return camelized;

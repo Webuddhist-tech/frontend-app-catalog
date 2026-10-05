@@ -14,6 +14,7 @@ export const CourseCard = ({
   isLoading,
   courseId,
   courseOrg,
+  organizationDisplayName,
   courseName,
   courseImageUrl,
   providerName,
@@ -28,7 +29,7 @@ export const CourseCard = ({
   // The institution offering the course leads the card. Where that isn't known
   // — the catalog search index carries a partner logo but no partner name —
   // the course's organization stands in for it.
-  const providerLabel = providerName || courseOrg;
+  const providerLabel = providerName || organizationDisplayName || courseOrg;
 
   const startDateDisplay = showStartDate && (courseStartDate || courseAdvertisedStart)
     ? getStartDateDisplay({ start: courseStartDate, advertisedStart: courseAdvertisedStart }, intl)
