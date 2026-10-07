@@ -10,6 +10,7 @@ export interface CourseData {
   start: string;
   imageUrl: string;
   org: string;
+  organizationDisplayName?: string;
   orgImageUrl?: string;
   partnerLogoUrl?: string;
   advertisedStart?: string;
@@ -31,6 +32,7 @@ export interface CourseCardProps {
   isLoading?: boolean;
   courseId?: string;
   courseOrg?: string;
+  organizationDisplayName?: string;
   courseName?: string;
   courseImageUrl?: string;
   /** Institution offering the course; falls back to courseOrg when unknown. */
