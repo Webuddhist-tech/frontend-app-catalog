@@ -1,5 +1,5 @@
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getHttpClient } from '@edx/frontend-platform/auth';
 
 import { getHomepageAnnouncementUrl } from './urls';
 import { ANNOUNCEMENT_TONES, type AnnouncementTone, type HomepageAnnouncement } from './types';
@@ -16,11 +16,18 @@ const announcementTone = (value: unknown): AnnouncementTone => (
     : 'info'
 );
 
-export const fetchHomepageAnnouncement = async (): Promise<HomepageAnnouncement | null> => {
-  // The unauthenticated client: this endpoint allows anonymous access and the
-  // homepage renders for signed-out visitors, for whom the authenticated
-  // client would attempt a pointless token refresh.
-  const { data, status } = await getHttpClient().get(getHomepageAnnouncementUrl());
+const dismissalSessionId = (value: unknown): string | null => (
+  typeof value === 'string' && value ? value : null
+);
+
+export const fetchHomepageAnnouncement = async (
+  isAuthenticated: boolean,
+): Promise<HomepageAnnouncement | null> => {
+  // Only the authenticated client sends the login cookie. The plain client
+  // stays for signed-out visitors, where that cookie is absent and the
+  // authenticated client would try to refresh a token that does not exist.
+  const httpClient = isAuthenticated ? getAuthenticatedHttpClient() : getHttpClient();
+  const { data, status } = await httpClient.get(getHomepageAnnouncementUrl());
 
   if (status === 204 || data == null || data === '') {
     return null;
@@ -32,5 +39,9 @@ export const fetchHomepageAnnouncement = async (): Promise<HomepageAnnouncement 
     return null;
   }
 
-  return { message, tone: announcementTone(body.tone) };
+  return {
+    message,
+    tone: announcementTone(body.tone),
+    dismissalSessionId: dismissalSessionId(body.dismissalSessionId),
+  };
 };
