@@ -19,25 +19,28 @@ const readDismissedMessage = () => {
 
 const CatalogAnnouncement = () => {
   const intl = useIntl();
-  const { data: message } = useHomepageAnnouncement();
+  const { data } = useHomepageAnnouncement();
   const [dismissedMessage, setDismissedMessage] = useState(readDismissedMessage);
 
-  if (!message || message === dismissedMessage) {
+  if (!data || data.message === dismissedMessage) {
     return null;
   }
 
   const dismiss = () => {
     try {
-      window.localStorage.setItem(DISMISSED_MESSAGE_KEY, message);
+      window.localStorage.setItem(DISMISSED_MESSAGE_KEY, data.message);
     } catch {
       // Hide it for this view even when storage is blocked.
     }
-    setDismissedMessage(message);
+    setDismissedMessage(data.message);
   };
 
   return (
-    <section className="catalog-announcement" aria-label={intl.formatMessage(messages.label)}>
-      <p className="catalog-announcement__message">{message}</p>
+    <section
+      className={`catalog-announcement catalog-announcement--${data.tone}`}
+      aria-label={intl.formatMessage(messages.label)}
+    >
+      <p className="catalog-announcement__message">{data.message}</p>
       <button
         type="button"
         className="catalog-announcement__dismiss"
