@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   dashboard: {
     id: 'category.header.dashboard.label',
-    defaultMessage: 'Dashboard',
+    defaultMessage: 'My Courses',
     description: 'The text for the link to the Dashboard page.',
   },
   help: {
@@ -18,7 +18,7 @@ const messages = defineMessages({
   },
   exploreCourses: {
     id: 'category.header.explore-courses',
-    defaultMessage: 'Explore courses',
+    defaultMessage: 'Explore Courses',
     description: 'The text for the link to the Explore courses page.',
   },
   programs: {
@@ -28,7 +28,7 @@ const messages = defineMessages({
   },
   discoverNew: {
     id: 'category.header.discoverNew',
-    defaultMessage: 'Discover New',
+    defaultMessage: 'Explore Courses',
     description: 'The text for the link to the Discover new page.',
   },
   wishlist: {
