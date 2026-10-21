@@ -1209,6 +1209,10 @@ describe('CatalogPage', () => {
   });
 
   describe('page heading', () => {
+    afterEach(() => {
+      delete window.testHistory;
+    });
+
     it('should display default title when no search is performed', () => {
       mockUseCourseListSearch.mockReturnValue({
         isLoading: false,
@@ -1291,7 +1295,7 @@ describe('CatalogPage', () => {
       });
     });
 
-    it('should keep cached courses visible after empty results and restore the search title once data returns', async () => {
+    it('should replace cached courses with the empty message and restore them once data returns', async () => {
       const mockFetchData = jest.fn();
       const query = 'nonexistent';
 
@@ -1330,11 +1334,15 @@ describe('CatalogPage', () => {
         expect(screen.getByText(
           messages.noSearchResults.defaultMessage.replace('{query}', query),
         )).toBeInTheDocument();
+        expect(screen.getByText(messages.noResultsFound.defaultMessage)).toBeInTheDocument();
       });
 
       mockCourseListSearchResponse.results.forEach(result => {
-        expect(screen.getByText(result.data.content.displayName)).toBeInTheDocument();
+        expect(screen.queryByText(result.data.content.displayName)).not.toBeInTheDocument();
       });
+      expect(screen.getByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage)).toBeInTheDocument();
+      expect(screen.getByText(messages.noResultsFoundMessage.defaultMessage)).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: messages.organizations.defaultMessage })).not.toBeInTheDocument();
 
       mockUseCourseListSearch.mockReturnValue({
         isLoading: false,
@@ -1351,6 +1359,110 @@ describe('CatalogPage', () => {
           messages.searchResults.defaultMessage.replace('{query}', query),
         )).toBeInTheDocument();
       });
+    });
+
+    it('should hide filters when an empty search response has no aggregations', async () => {
+      const mockFetchData = jest.fn();
+      mockUseCourseListSearch.mockReturnValue({
+        isLoading: false,
+        isError: false,
+        data: mockCourseListSearchResponse,
+        fetchData: mockFetchData,
+        isFetching: false,
+      });
+
+      const { rerender } = render(<CatalogPage />);
+
+      const searchField = screen.getByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage);
+      await userEvent.type(searchField, 'missing');
+      await userEvent.keyboard('{Enter}');
+
+      mockUseCourseListSearch.mockReturnValue({
+        isLoading: false,
+        isError: false,
+        data: {
+          ...mockCourseListSearchResponse,
+          results: [],
+          total: 0,
+          aggs: {},
+        },
+        fetchData: mockFetchData,
+        isFetching: false,
+      });
+
+      rerender(<CatalogPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(messages.noResultsFound.defaultMessage)).toBeInTheDocument();
+      });
+      expect(screen.queryByRole('button', { name: messages.organizations.defaultMessage })).not.toBeInTheDocument();
+    });
+
+    it('should keep the search box and hide filters when a zero-hit search is reloaded', async () => {
+      window.testHistory = ['/courses?search_query=fdsfdsfdsfsd'];
+      mockUseCourseListSearch.mockReturnValue({
+        isLoading: false,
+        isError: false,
+        data: {
+          ...mockCourseListSearchResponse,
+          results: [],
+          total: 0,
+        },
+        fetchData: jest.fn(),
+        isFetching: false,
+      });
+
+      render(<CatalogPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText(
+          messages.noSearchResults.defaultMessage.replace('{query}', 'fdsfdsfdsfsd'),
+        )).toBeInTheDocument();
+      });
+      expect(screen.queryByText(messages.noCoursesAvailable.defaultMessage)).not.toBeInTheDocument();
+      expect(screen.getByText(messages.noResultsFound.defaultMessage)).toBeInTheDocument();
+      expect(screen.getByText(messages.noResultsFoundMessage.defaultMessage)).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: messages.organizations.defaultMessage })).not.toBeInTheDocument();
+    });
+
+    it('should keep the empty panel while a cleared search is still loading', async () => {
+      window.testHistory = ['/courses?search_query=veveve'];
+      mockUseCourseListSearch.mockReturnValue({
+        isLoading: false,
+        isError: false,
+        data: {
+          ...mockCourseListSearchResponse,
+          results: [],
+          total: 0,
+        },
+        fetchData: jest.fn(),
+        isFetching: false,
+      });
+
+      render(<CatalogPage />);
+
+      const searchField = await screen.findByPlaceholderText(
+        sharedMessages.courseSearchPlaceholder.defaultMessage,
+      );
+
+      mockUseCourseListSearch.mockReturnValue({
+        isLoading: false,
+        isError: false,
+        data: {
+          ...mockCourseListSearchResponse,
+          results: [],
+          total: 0,
+        },
+        fetchData: jest.fn(),
+        isFetching: true,
+      });
+
+      await userEvent.clear(searchField);
+      await userEvent.keyboard('{Enter}');
+
+      expect(screen.queryByText(messages.noCoursesAvailable.defaultMessage)).not.toBeInTheDocument();
+      expect(screen.getByText(messages.noResultsFound.defaultMessage)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(sharedMessages.courseSearchPlaceholder.defaultMessage)).toBeInTheDocument();
     });
 
     it('should display search results title when search is cleared after having results', async () => {
