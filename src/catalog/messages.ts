@@ -33,8 +33,13 @@ const messages = defineMessages({
   },
   noResultsFound: {
     id: 'category.catalog.no-results-found',
-    defaultMessage: 'No results found',
-    description: 'No results found.',
+    defaultMessage: 'No Result Found',
+    description: 'Title of the empty state shown when a search or filter matches no courses.',
+  },
+  noResultsFoundMessage: {
+    id: 'category.catalog.no-results-found-message',
+    defaultMessage: 'Give it another go.',
+    description: 'Line under the empty-state title when a search or filter matches no courses.',
   },
   organizations: {
     id: 'category.catalog.filter.organizations',
